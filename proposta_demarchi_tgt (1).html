@@ -1,0 +1,1445 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TGT × Grupo De Marchi — Proposta 360°</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Archivo+Black&family=Inter:wght@300;400;500;600;700;800;900&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --tgt-black:#231F20;
+    --tgt-white:#FFFFFF;
+    --tgt-cream:#E2DBCE;
+    --tgt-red:#ED1C24;
+    --tgt-blue:#455E6E;
+    --tgt-gray-80:#575756;
+    --tgt-gray-50:#9D9D9C;
+    --tgt-gray-25:#D0D0D0;
+
+    --dm-blue:#303366;
+    --dm-yellow:#F2A10E;
+    --dm-red:#BC2D25;
+    --dm-green:#006F3C;
+
+    --ease: cubic-bezier(.2,.7,.2,1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;background:var(--tgt-black);color:var(--tgt-white);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;overflow:hidden}
+
+  /* === DECK STRUCTURE === */
+  .deck{position:relative;width:100vw;height:100vh;overflow:hidden}
+  .slide{
+    position:absolute;inset:0;
+    display:flex;flex-direction:column;
+    padding:clamp(28px,4vw,72px);
+    opacity:0;visibility:hidden;
+    transform:translateX(40px);
+    transition:opacity .55s var(--ease), transform .55s var(--ease), visibility .55s;
+    overflow:hidden;
+  }
+  .slide.active{opacity:1;visibility:visible;transform:none}
+  .slide.prev{transform:translateX(-40px)}
+
+  /* === BACKGROUNDS === */
+  .bg-dark{background:var(--tgt-black);color:var(--tgt-white)}
+  .bg-cream{background:var(--tgt-cream);color:var(--tgt-black)}
+  .bg-red{background:var(--tgt-red);color:var(--tgt-white)}
+
+  /* grain texture */
+  .grain::before{
+    content:"";position:absolute;inset:0;pointer-events:none;opacity:.18;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .35 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+
+  /* === GLOBAL TYPE === */
+  .display{font-family:'Archivo Black',Archivo,sans-serif;line-height:.88;letter-spacing:-.02em;text-transform:none}
+  .display-tight{font-family:'Archivo',sans-serif;font-weight:900;line-height:.95;letter-spacing:-.02em}
+  .eyebrow{font-family:'Archivo',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.22em;font-size:11px;color:var(--tgt-red)}
+  .eyebrow-light{color:var(--tgt-red)}
+  .eyebrow-dark{color:var(--tgt-red)}
+  .body{font-family:'Inter',sans-serif;font-weight:400;line-height:1.55}
+  .mono{font-family:'Inter',sans-serif;font-feature-settings:"tnum","ss01";font-variant-numeric:tabular-nums}
+  .handwriting{font-family:'Caveat',cursive;font-weight:700}
+
+  /* === DECORATIVE ELEMENTS === */
+  .asterisk{
+    display:inline-block;color:var(--tgt-red);font-family:'Archivo Black',sans-serif;
+    transform:translateY(.1em);
+  }
+  .dot{display:inline-block;width:.55em;height:.55em;border-radius:50%;background:var(--tgt-red);vertical-align:middle;margin:0 .25em}
+  .tag{display:inline-block;background:var(--tgt-white);color:var(--tgt-black);padding:6px 10px;font-family:'Archivo',sans-serif;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.14em;border-radius:2px;transform:rotate(-2deg)}
+  .tag.red{background:var(--tgt-red);color:var(--tgt-white)}
+  .tag.cream{background:var(--tgt-cream);color:var(--tgt-black)}
+
+  /* === SVG asterisk === */
+  .ast-svg{display:inline-block;vertical-align:middle}
+
+  /* === HEADER on each slide === */
+  .slide-head{
+    display:flex;justify-content:space-between;align-items:center;
+    width:100%;margin-bottom:auto;flex-shrink:0;
+  }
+  .slide-head .logo{
+    font-family:'Archivo Black',sans-serif;font-size:18px;letter-spacing:-.04em;
+    color:var(--tgt-red);display:flex;align-items:center;gap:8px;
+  }
+  .slide-head .logo small{font-family:'Archivo',sans-serif;font-weight:700;font-size:9px;color:inherit;text-transform:uppercase;letter-spacing:.16em;line-height:1.1;opacity:.85}
+  .slide-head .meta{font-family:'Archivo',sans-serif;font-size:10px;text-transform:uppercase;letter-spacing:.2em;opacity:.7;font-weight:600}
+  .bg-cream .slide-head .meta, .bg-cream .slide-head .logo small{color:var(--tgt-black)}
+  .bg-cream .slide-head .meta{opacity:.55}
+
+  /* === FOOTER on each slide === */
+  .slide-foot{
+    display:flex;justify-content:space-between;align-items:flex-end;
+    margin-top:auto;padding-top:24px;flex-shrink:0;
+    font-family:'Archivo',sans-serif;font-size:10px;text-transform:uppercase;letter-spacing:.2em;font-weight:600;
+  }
+  .slide-foot .num{color:var(--tgt-red);font-family:'Archivo Black',sans-serif;font-size:14px;letter-spacing:0}
+  .bg-cream .slide-foot{opacity:.7}
+
+  /* === CONTROLS === */
+  .controls{
+    position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+    z-index:100;display:flex;align-items:center;gap:14px;
+    background:rgba(35,31,32,.92);border:1px solid rgba(255,255,255,.08);
+    backdrop-filter:blur(10px);padding:10px 16px;border-radius:999px;
+  }
+  .ctrl-btn{
+    background:transparent;border:none;color:var(--tgt-white);cursor:pointer;
+    width:34px;height:34px;border-radius:50%;display:grid;place-items:center;
+    transition:background .2s var(--ease);
+  }
+  .ctrl-btn:hover{background:var(--tgt-red)}
+  .ctrl-btn svg{width:14px;height:14px}
+  .progress{font-family:'Archivo Black',sans-serif;font-size:13px;color:var(--tgt-white);min-width:54px;text-align:center;letter-spacing:.04em}
+  .progress span:first-child{color:var(--tgt-red)}
+
+  /* === SLIDE 1 - COVER === */
+  .cover-grid{display:grid;grid-template-columns:1fr;grid-template-rows:auto 1fr auto;height:100%;width:100%;position:relative;z-index:2}
+  .cover-title{font-size:clamp(48px,9.5vw,170px);line-height:.82;letter-spacing:-.035em}
+  .cover-title .line{display:block;overflow:hidden}
+  .cover-title em{font-style:normal;color:var(--tgt-red)}
+  .cover-strap{
+    display:grid;grid-template-columns:1.2fr 1fr;gap:48px;align-items:end;margin-top:auto;
+  }
+  .cover-strap .lede{font-size:clamp(15px,1.2vw,18px);max-width:520px;line-height:1.5;color:var(--tgt-cream)}
+  .cover-strap .meta-block{justify-self:end;text-align:right;display:flex;flex-direction:column;gap:8px}
+  .cover-strap .meta-block .tag{align-self:flex-end}
+  .cover-deco{position:absolute;right:5vw;top:18vh;width:clamp(120px,16vw,260px);height:clamp(120px,16vw,260px);z-index:1;pointer-events:none}
+  .ring{
+    position:absolute;border-radius:50%;border:1px solid rgba(237,28,36,.4);
+  }
+
+  /* === SLIDE 2 - DE ONDE PARTIMOS === */
+  .two-col{display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(32px,4vw,64px);align-items:start;flex:1;min-height:0}
+  .h-display{font-size:clamp(40px,5.5vw,84px);line-height:.95;letter-spacing:-.025em}
+  .h-section{font-size:clamp(28px,3.4vw,52px);line-height:1;letter-spacing:-.02em;font-family:'Archivo',sans-serif;font-weight:900}
+  .stack-cards{display:flex;flex-direction:column;gap:14px}
+  .stack-card{
+    background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);
+    padding:18px 22px;border-radius:6px;display:flex;align-items:center;gap:14px;
+    font-family:'Inter',sans-serif;font-weight:500;font-size:14.5px;
+  }
+  .stack-card .ic{width:28px;height:28px;border-radius:50%;background:var(--tgt-red);display:grid;place-items:center;flex-shrink:0;font-family:'Archivo Black',sans-serif;font-size:12px;color:#fff}
+  .bg-cream .stack-card{background:rgba(35,31,32,.04);border-color:rgba(35,31,32,.1)}
+
+  /* === SLIDE 3 - ANTES x AGORA === */
+  .compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(20px,2.2vw,36px);flex:1;align-items:stretch;min-height:0;margin-top:auto}
+  .compare-col{
+    border:1px solid rgba(255,255,255,.12);border-radius:8px;
+    padding:clamp(20px,2.4vw,38px);display:flex;flex-direction:column;gap:14px;
+    position:relative;overflow:hidden;
+  }
+  .compare-col.now{background:var(--tgt-red);border-color:var(--tgt-red)}
+  .compare-col h3{font-family:'Archivo Black',sans-serif;font-size:clamp(22px,2.4vw,36px);letter-spacing:-.02em;margin-bottom:6px}
+  .compare-col .tag-mini{font-family:'Archivo',sans-serif;font-size:10px;text-transform:uppercase;letter-spacing:.22em;font-weight:700;opacity:.7;margin-bottom:6px}
+  .compare-col ul{list-style:none;display:flex;flex-direction:column;gap:7px}
+  .compare-col li{font-size:13.5px;line-height:1.45;display:flex;gap:10px;align-items:flex-start}
+  .compare-col li::before{content:"";flex-shrink:0;width:6px;height:6px;border-radius:50%;background:currentColor;margin-top:7px;opacity:.75}
+  .compare-col.now li::before{background:#fff;opacity:1}
+
+  /* === SLIDE 4 - OPORTUNIDADE === */
+  .opp-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;margin-top:32px;flex:1;min-height:0}
+  .opp-card{
+    background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+    padding:24px;border-radius:6px;display:flex;flex-direction:column;gap:10px;
+    transition:transform .3s var(--ease), border-color .3s;
+  }
+  .opp-card:hover{transform:translateY(-3px);border-color:var(--tgt-red)}
+  .opp-card .num{font-family:'Archivo Black',sans-serif;color:var(--tgt-red);font-size:24px;letter-spacing:-.02em}
+  .opp-card h4{font-family:'Archivo',sans-serif;font-weight:800;font-size:17px;letter-spacing:-.01em}
+  .opp-card p{font-size:13px;line-height:1.55;opacity:.78}
+
+  /* === SLIDE 5 - NÚCLEO INTEGRADO === */
+  .nucleus{position:relative;flex:1;display:grid;grid-template-columns:.8fr 1.2fr;gap:48px;align-items:center;min-height:0}
+  .nucleus-vis{position:relative;height:100%;min-height:380px}
+  .roles{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .role{
+    background:var(--tgt-cream);color:var(--tgt-black);
+    padding:16px 18px;border-radius:6px;display:flex;flex-direction:column;gap:4px;
+  }
+  .role .lbl{font-family:'Archivo',sans-serif;font-weight:900;font-size:13px;letter-spacing:-.005em}
+  .role .desc{font-size:11.5px;line-height:1.4;opacity:.7;font-weight:500}
+  .role.av{background:var(--tgt-red);color:#fff;grid-column:span 2}
+  .role.av .desc{opacity:.85}
+
+  /* === SLIDE 6 - PILARES === */
+  .pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;flex:1;min-height:0}
+  .pillars-7{grid-template-columns:repeat(4,1fr);grid-template-rows:1fr 1fr}
+  .pillars-5{grid-template-columns:repeat(5,1fr)}
+  .pillar{
+    background:rgba(35,31,32,.04);border:1px solid rgba(35,31,32,.12);
+    padding:20px 22px;border-radius:8px;display:flex;flex-direction:column;gap:12px;
+    transition:all .25s var(--ease);
+  }
+  .bg-dark .pillar{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.1)}
+  .pillar:hover{border-color:var(--tgt-red);transform:translateY(-2px)}
+  .pillar-highlight{background:var(--tgt-red) !important;border-color:var(--tgt-red) !important;color:#fff}
+  .pillar-highlight .ic{background:#fff !important;color:var(--tgt-red) !important}
+  .pillar-highlight li{opacity:.95}
+  .pillar-highlight li::before{color:#fff !important}
+  .pillar .head{display:flex;align-items:center;gap:12px}
+  .pillar .ic{width:34px;height:34px;border-radius:50%;background:var(--tgt-red);display:grid;place-items:center;color:#fff;flex-shrink:0}
+  .pillar h4{font-family:'Archivo',sans-serif;font-weight:900;font-size:15px;letter-spacing:-.01em}
+  .pillars-7 .pillar h4{font-size:14px}
+  .pillars-7 .pillar{padding:18px}
+  .pillars-7 .pillar ul{font-size:12px}
+  .pillar ul{list-style:none;display:flex;flex-direction:column;gap:5px;font-size:12.5px;line-height:1.42}
+  .pillar li{padding-left:14px;position:relative;opacity:.85}
+  .pillar li::before{content:"→";position:absolute;left:0;color:var(--tgt-red);font-weight:700}
+  .pillars-5 .pillar{padding:16px}
+  .pillars-5 .pillar h4{font-size:13.5px}
+  .pillars-5 .pillar ul{font-size:11.5px}
+
+  /* === SLIDE 7 - BENEFÍCIOS === */
+  .benefits{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;flex:1;align-content:center;min-height:0;margin:24px 0}
+  .benefit{
+    border:1px solid rgba(255,255,255,.12);padding:22px 18px;border-radius:6px;
+    display:flex;flex-direction:column;gap:6px;background:rgba(255,255,255,.03);
+  }
+  .benefit .plus{color:var(--tgt-red);font-family:'Archivo Black',sans-serif;font-size:22px;line-height:1}
+  .benefit h5{font-family:'Archivo',sans-serif;font-weight:800;font-size:14px;letter-spacing:-.01em;line-height:1.2}
+  .benefit p{font-size:11.5px;opacity:.7;line-height:1.4}
+
+  /* === SLIDE 8 - HORAS === */
+  .hours-compare{display:grid;grid-template-columns:1fr 1fr;gap:24px;flex:1;align-items:stretch;min-height:0;margin-top:24px}
+  .hours-card{
+    border:1px solid rgba(35,31,32,.15);padding:clamp(24px,2.6vw,40px);border-radius:8px;
+    display:flex;flex-direction:column;justify-content:space-between;gap:20px;
+    background:rgba(35,31,32,.03);
+  }
+  .hours-card.new{background:var(--tgt-black);color:#fff;border-color:var(--tgt-black)}
+  .hours-card .lbl{font-family:'Archivo',sans-serif;font-size:10px;text-transform:uppercase;letter-spacing:.22em;font-weight:700;opacity:.6}
+  .hours-card .big{font-family:'Archivo Black',sans-serif;font-size:clamp(64px,7.5vw,120px);line-height:.85;letter-spacing:-.035em}
+  .hours-card.new .big{color:var(--tgt-red)}
+  .hours-card .unit{font-family:'Archivo',sans-serif;font-weight:700;font-size:14px;opacity:.6;margin-top:6px}
+  .hours-card .breakdown{display:flex;flex-direction:column;gap:6px;font-size:13px;line-height:1.4;opacity:.85}
+  .hours-card .breakdown div{display:flex;align-items:center;gap:8px}
+  .hours-card .breakdown .dot-sm{width:6px;height:6px;border-radius:50%;background:var(--tgt-red);flex-shrink:0}
+  .hours-card .fee{font-family:'Archivo Black',sans-serif;font-size:24px;letter-spacing:-.01em}
+
+  /* === SLIDE 9 - INVESTIMENTO DM === */
+  .invest{display:grid;grid-template-columns:1fr 1fr;gap:48px;flex:1;align-items:center;min-height:0}
+  .invest-value{display:flex;flex-direction:column;gap:14px}
+  .invest-value .price{font-family:'Archivo Black',sans-serif;font-size:clamp(70px,8vw,130px);line-height:.85;letter-spacing:-.035em;color:var(--tgt-red)}
+  .invest-value .price-prefix{font-family:'Archivo',sans-serif;font-weight:700;font-size:18px;opacity:.6;text-transform:uppercase;letter-spacing:.18em}
+  .invest-value .month{font-family:'Archivo',sans-serif;font-weight:700;font-size:16px;opacity:.8;letter-spacing:-.01em}
+  .invest-detail{display:flex;flex-direction:column;gap:14px}
+  .invest-detail .item{
+    display:flex;gap:14px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.1)
+  }
+  .bg-cream .invest-detail .item{border-bottom-color:rgba(35,31,32,.15)}
+  .invest-detail .item:last-child{border-bottom:none}
+  .invest-detail .item .ic{
+    width:32px;height:32px;border-radius:50%;background:var(--tgt-red);
+    display:grid;place-items:center;flex-shrink:0;color:#fff;
+    font-family:'Archivo Black',sans-serif;font-size:12px;
+  }
+  .invest-detail .item h5{font-family:'Archivo',sans-serif;font-weight:800;font-size:14.5px;margin-bottom:3px}
+  .invest-detail .item p{font-size:12.5px;line-height:1.4;opacity:.75}
+
+  /* === SLIDE 10 - FAZENDA INTRO === */
+  .farm-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:48px;flex:1;min-height:0;align-items:center}
+  .farm-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+  .farm-tag{
+    background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);
+    padding:8px 14px;border-radius:999px;font-size:12.5px;font-weight:500;
+  }
+  .farm-vis{
+    position:relative;height:100%;min-height:340px;
+    background:linear-gradient(135deg, rgba(69,94,110,.5), rgba(35,31,32,.2));
+    border-radius:8px;overflow:hidden;display:grid;place-items:center;
+  }
+  .farm-mono{
+    font-family:'Archivo Black',sans-serif;font-size:clamp(60px,9vw,140px);line-height:.82;
+    color:var(--tgt-red);letter-spacing:-.04em;
+    -webkit-text-stroke:1px var(--tgt-red);color:transparent;
+    text-align:center;
+  }
+  .farm-mono span{display:block;color:var(--tgt-red);-webkit-text-stroke:0}
+
+  /* === SLIDE 11 - ESCOPO FAZENDA === */
+  /* uses .pillars */
+
+  /* === SLIDE 12 - INVESTIMENTO FAZENDA === */
+  /* uses .invest */
+
+  /* === SLIDE 12 - PHASED PRICING === */
+  .phases{
+    display:grid;grid-template-columns:1fr 1fr;gap:18px;
+    flex:1;align-items:stretch;min-height:0;
+  }
+  .phase{
+    border:1px solid rgba(255,255,255,.14);border-radius:10px;
+    padding:clamp(22px,2.4vw,32px);
+    display:flex;flex-direction:column;gap:14px;position:relative;overflow:hidden;
+  }
+  .phase-1{background:var(--tgt-red);border-color:var(--tgt-red);color:#fff}
+  .phase-2{background:rgba(255,255,255,.04)}
+  .phase-tag{
+    display:inline-flex;align-items:center;gap:8px;align-self:flex-start;
+    background:rgba(0,0,0,.25);padding:6px 12px;border-radius:999px;
+    font-family:'Archivo',sans-serif;font-weight:800;font-size:10px;
+    text-transform:uppercase;letter-spacing:.18em;
+  }
+  .phase-2 .phase-tag{background:rgba(255,255,255,.08)}
+  .phase-tag .pulse{width:7px;height:7px;border-radius:50%;background:#fff}
+  .phase-2 .phase-tag .pulse{background:var(--tgt-red)}
+  .phase-period{font-family:'Archivo Black',sans-serif;font-size:clamp(22px,2.4vw,32px);letter-spacing:-.02em;line-height:1}
+  .phase-price{font-family:'Archivo Black',sans-serif;font-size:clamp(46px,5.4vw,86px);letter-spacing:-.035em;line-height:.9}
+  .phase-1 .phase-price{color:#fff}
+  .phase-2 .phase-price{color:var(--tgt-red)}
+  .phase-price .cents{font-size:.4em;opacity:.7}
+  .phase-sub{font-family:'Archivo',sans-serif;font-weight:600;font-size:13px;opacity:.85;letter-spacing:-.005em}
+  .phase-list{display:flex;flex-direction:column;gap:6px;margin-top:auto;padding-top:14px;border-top:1px solid rgba(255,255,255,.18)}
+  .phase-2 .phase-list{border-top-color:rgba(255,255,255,.1)}
+  .phase-list .it{display:flex;gap:10px;align-items:flex-start;font-size:12.5px;line-height:1.45}
+  .phase-list .it::before{content:"";width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0;margin-top:7px;opacity:.8}
+
+  .phase-note{
+    margin-top:18px;font-size:13px;line-height:1.5;opacity:.75;max-width:880px;
+  }
+
+  /* === SLIDE 13 - kick-off callout === */
+  .kickoff-note{
+    margin-top:14px;display:grid;grid-template-columns:auto 1fr auto;gap:24px;align-items:center;
+    background:rgba(237,28,36,.08);border:1px solid rgba(237,28,36,.35);
+    border-radius:10px;padding:18px 22px;
+  }
+  .kickoff-note .ko-tag{
+    font-family:'Archivo Black',sans-serif;font-size:10px;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--tgt-red);
+    background:rgba(237,28,36,.15);padding:6px 12px;border-radius:999px;
+    display:inline-flex;align-items:center;gap:8px;
+  }
+  .kickoff-note .ko-tag::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--tgt-red)}
+  .kickoff-note .ko-text{font-size:13px;line-height:1.5;opacity:.85}
+  .kickoff-note .ko-price{font-family:'Archivo Black',sans-serif;font-size:22px;letter-spacing:-.005em;color:var(--tgt-red);white-space:nowrap}
+  .kickoff-note .ko-price small{font-family:'Archivo',sans-serif;font-weight:600;font-size:11px;letter-spacing:.06em;display:block;opacity:.7;color:#fff;text-transform:uppercase}
+
+  /* === SLIDE 13 - TABELA CONSOLIDADA === */
+  .table-wrap{flex:1;display:flex;flex-direction:column;justify-content:center;gap:14px;min-height:0;margin-top:18px}
+  .consol{
+    display:grid;grid-template-columns:1.6fr 2.2fr 1fr 1.2fr;
+    border:1px solid rgba(255,255,255,.14);border-radius:8px;overflow:hidden;
+  }
+  .consol .row{display:contents}
+  .consol .cell{
+    padding:18px 22px;border-bottom:1px solid rgba(255,255,255,.08);
+    display:flex;align-items:center;gap:10px;font-size:13.5px;line-height:1.4;
+  }
+  .consol .row.head .cell{
+    background:rgba(255,255,255,.04);
+    font-family:'Archivo',sans-serif;font-weight:800;text-transform:uppercase;
+    font-size:10.5px;letter-spacing:.18em;opacity:.7;
+  }
+  .consol .row.total .cell{
+    background:var(--tgt-red);color:#fff;
+    font-family:'Archivo Black',sans-serif;font-size:16px;border-bottom:none;
+  }
+  .consol .row:not(.total):last-child .cell{border-bottom:none}
+  .consol .cell.price{font-family:'Archivo Black',sans-serif;font-size:16px;letter-spacing:-.005em}
+  .consol .row.total .cell.price{font-size:22px}
+  .consol .cell .pip{width:8px;height:8px;border-radius:50%;background:var(--tgt-red);flex-shrink:0}
+  .table-note{font-size:12.5px;line-height:1.5;opacity:.7;max-width:880px;padding:0 4px}
+
+  /* === SLIDE 14 - OPERAÇÃO === */
+  .ops-flow{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:14px;flex:1;min-height:0;
+    align-content:center;margin:24px 0;
+  }
+  .ops-step{
+    background:rgba(35,31,32,.04);border:1px solid rgba(35,31,32,.12);
+    padding:22px 20px;border-radius:8px;
+    display:flex;flex-direction:column;gap:8px;position:relative;
+  }
+  .bg-dark .ops-step{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.1)}
+  .ops-step .step{font-family:'Archivo Black',sans-serif;color:var(--tgt-red);font-size:12px;letter-spacing:.06em}
+  .ops-step h5{font-family:'Archivo',sans-serif;font-weight:800;font-size:14.5px;letter-spacing:-.005em;line-height:1.2}
+  .ops-step p{font-size:12px;line-height:1.45;opacity:.75}
+
+  /* === SLIDE 15 - POR QUE TGT === */
+  .why-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;flex:1;min-height:0;align-items:center}
+  .why-list{display:flex;flex-direction:column;gap:0}
+  .why-item{
+    padding:18px 0;border-bottom:1px solid rgba(255,255,255,.1);
+    display:flex;gap:18px;align-items:flex-start;
+    transition:transform .25s var(--ease);
+  }
+  .why-item:hover{transform:translateX(6px)}
+  .why-item:last-child{border-bottom:none}
+  .why-item .num{
+    font-family:'Archivo Black',sans-serif;color:var(--tgt-red);
+    font-size:14px;min-width:30px;letter-spacing:0;padding-top:3px;
+  }
+  .why-item h5{font-family:'Archivo',sans-serif;font-weight:800;font-size:16px;margin-bottom:3px}
+  .why-item p{font-size:13px;line-height:1.5;opacity:.75}
+
+  /* === SLIDE 16 - FECHAMENTO === */
+  .closing{display:flex;flex-direction:column;justify-content:center;flex:1;gap:24px;text-align:center;align-items:center;min-height:0}
+  .closing .display{font-size:clamp(40px,6.8vw,110px);max-width:1200px}
+  .closing .display em{font-style:normal;color:var(--tgt-red)}
+  .arrows{display:flex;flex-direction:column;gap:8px;margin:8px 0;align-items:center}
+  .arrow-line{
+    font-family:'Archivo',sans-serif;font-weight:700;font-size:clamp(14px,1.4vw,18px);
+    display:flex;align-items:center;gap:14px;
+  }
+  .arrow-line .from{opacity:.5;text-decoration:line-through;text-decoration-color:var(--tgt-red)}
+  .arrow-line .to{color:var(--tgt-red)}
+  .arrow-line svg{flex-shrink:0}
+  .cta-btn{
+    display:inline-flex;align-items:center;gap:10px;
+    background:var(--tgt-red);color:#fff;padding:18px 32px;
+    font-family:'Archivo Black',sans-serif;font-size:14px;letter-spacing:.04em;
+    text-transform:uppercase;border-radius:999px;text-decoration:none;
+    transition:transform .25s var(--ease);
+  }
+  .cta-btn:hover{transform:translateY(-2px)}
+
+  /* === SHARED DECORATIVE === */
+  .red-circle{position:absolute;background:var(--tgt-red);border-radius:50%;pointer-events:none;z-index:0}
+  .red-circle.r1{width:14px;height:14px}
+  .red-circle.r2{width:28px;height:28px}
+  .red-circle.r3{width:60px;height:60px}
+
+  .corner-mark{
+    position:absolute;font-family:'Archivo',sans-serif;font-weight:700;
+    font-size:10px;text-transform:uppercase;letter-spacing:.22em;opacity:.4;
+  }
+
+  /* === COVER VISUAL DETAILS === */
+  .cover-asterisk{
+    position:absolute;
+    right:8vw;top:12vh;
+    width:clamp(140px,18vw,300px);
+    color:var(--tgt-red);
+    z-index:1;
+    animation:slowspin 22s linear infinite;
+  }
+  @keyframes slowspin{to{transform:rotate(360deg)}}
+
+  /* === DECK CONTENT INSIDE === */
+  .content{display:flex;flex-direction:column;flex:1;min-height:0;width:100%;position:relative;z-index:2}
+
+  /* === scrollable safety on small heights === */
+  @media (max-height:700px){
+    .slide{padding:24px 32px}
+    .compare-col li,.opp-card p,.benefit p,.pillar li,.ops-step p,.why-item p{font-size:11.5px}
+  }
+
+  /* === Print/PDF === */
+  @media print{
+    html,body{background:#fff}
+    .controls{display:none}
+    .slide{position:relative;page-break-after:always;height:100vh;opacity:1;visibility:visible;transform:none}
+  }
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+
+<!-- ====================================== -->
+<!-- SLIDE 1 — COVER                         -->
+<!-- ====================================== -->
+<section class="slide active bg-dark grain" data-slide="1">
+  <div class="slide-head">
+    <div class="logo">TGT<small>A AGÊNCIA<br>ALÉM DO MARKETING</small></div>
+    <div class="meta">Proposta · 2026</div>
+  </div>
+
+  <svg class="cover-asterisk" viewBox="0 0 100 100" aria-hidden="true">
+    <g fill="currentColor">
+      <rect x="46" y="0" width="8" height="100"/>
+      <rect x="0" y="46" width="100" height="8"/>
+      <rect x="46" y="0" width="8" height="100" transform="rotate(45 50 50)"/>
+      <rect x="46" y="0" width="8" height="100" transform="rotate(-45 50 50)"/>
+    </g>
+  </svg>
+  <span class="red-circle r3" style="left:6vw;bottom:20vh;opacity:.9"></span>
+  <span class="red-circle r2" style="left:10vw;bottom:14vh"></span>
+
+  <div class="content cover-grid">
+    <div style="display:flex;flex-direction:column;gap:24px;margin-top:6vh">
+      <span class="eyebrow"><span class="dot"></span>Grupo De Marchi <span style="opacity:.5">×</span> TGTstudio</span>
+    </div>
+    <h1 class="display cover-title" style="margin:auto 0">
+      <span class="line">Uma nova</span>
+      <span class="line">estrutura de</span>
+      <span class="line">marketing <em>360°</em></span>
+      <span class="line" style="font-size:.55em;letter-spacing:-.02em;color:var(--tgt-cream);margin-top:.4em">para acelerar marca, produto e canais.</span>
+    </h1>
+    <div class="cover-strap">
+      <p class="lede">Proposta de evolução da parceria: de uma operação digital para uma <strong style="color:#fff">célula integrada de marketing</strong>, dedicada a De Marchi Alimentos e à nova frente Fazenda Irmãos De Marchi.</p>
+      <div class="meta-block">
+        <span class="tag red">Full Service</span>
+        <span class="tag cream">Time Dedicado</span>
+        <span class="tag" style="background:var(--tgt-cream)">210 + 60 h/mês</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================== -->
+<!-- SLIDE 2 — DE ONDE PARTIMOS              -->
+<!-- ====================================== -->
+<section class="slide bg-cream" data-slide="2">
+  <div class="slide-head">
+    <div class="logo" style="color:var(--tgt-red)">TGT<small style="color:var(--tgt-black)">A AGÊNCIA<br>ALÉM DO MARKETING</small></div>
+    <div class="meta">02 · Contexto</div>
+  </div>
+
+  <span class="red-circle r3" style="right:8vw;top:14vh;opacity:.15"></span>
+  <span class="red-circle r1" style="right:14vw;top:24vh"></span>
+
+  <div class="content" style="margin-top:6vh">
+    <span class="eyebrow" style="margin-bottom:18px">De onde partimos</span>
+    <h2 class="h-display" style="max-width:1100px;margin-bottom:36px">
+      A primeira proposta organizou a <em style="color:var(--tgt-red);font-style:normal">presença digital</em> da De Marchi. Agora, o desafio cresceu.
+    </h2>
+
+    <div class="two-col">
+      <div style="display:flex;flex-direction:column;gap:18px">
+        <p class="body" style="font-size:16px;max-width:560px;line-height:1.55">
+          Em 2025, estruturamos juntos a presença digital da De Marchi Alimentos: <strong>posicionamento de marca, gestão de redes, audiovisual, influenciadores, mídia paga e relatórios</strong> em uma operação de até 120h/mês.
+        </p>
+        <p class="body" style="font-size:16px;max-width:560px;line-height:1.55">
+          O resultado: uma marca que ganhou consistência digital, voz clara e abriu espaço para um movimento maior — uma arquitetura inteira de comunicação para o Grupo.
+        </p>
+        <p class="handwriting" style="font-size:30px;color:var(--tgt-red);margin-top:14px;transform:rotate(-2deg);max-width:520px">
+          "Cuidamos do campo, das pessoas e do que chega à mesa." — De Marchi
+        </p>
+      </div>
+
+      <div class="stack-cards" style="align-self:start">
+        <div class="stack-card"><span class="ic">1</span> Social media + conteúdo orgânico</div>
+        <div class="stack-card"><span class="ic">2</span> Produção audiovisual pontual</div>
+        <div class="stack-card"><span class="ic">3</span> Influenciadores + UGC</div>
+        <div class="stack-card"><span class="ic">4</span> Tráfego pago e performance</div>
+        <div class="stack-card"><span class="ic">5</span> Análise de dados e relatórios</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-foot">
+    <span>Grupo De Marchi × TGTstudio</span>
+    <span class="num">02 / 16</span>
+  </div>
+</section>
+
+<!-- ====================================== -->
+<!-- SLIDE 3 — O QUE MUDOU                   -->
+<!-- ====================================== -->
+<section class="slide bg-dark grain" data-slide="3">
+  <div class="slide-head">
+    <div class="logo">TGT<small>A AGÊNCIA<br>ALÉM DO MARKETING</small></div>
+    <div class="meta">03 · A virada</div>
+  </div>
+
+  <span class="red-circle r3" style="left:42%;top:8vh;opacity:.6"></span>
+
+  <div class="content" style="margin-top:4vh">
+    <span class="eyebrow">O que mudou</span>
+    <h2 class="h-display" style="max-width:1100px;margin:14px 0 28px;color:#fff">
+      De uma <span style="color:var(--tgt-gray-50);text-decoration:line-through;text-decoration-color:var(--tgt-red);text-decoration-thickness:3px">operação digital</span> para uma operação <em style="color:var(--tgt-red);font-style:normal">360°.</em>
+    </h2>
+
+    <div class="compare-grid">
+      <div class="compare-col">
+        <span class="tag-mini">Antes · 2025</span>
+        <h3>Presença Digital Estruturada</h3>
+        <ul>
+          <li>Social media e community management</li>
+          <li>Conteúdo orgânico para Instagram, TikTok, Facebook, YouTube</li>
+          <li>Produção audiovisual pontual</li>
+          <li>Influenciadores e UGC</li>
+          <li>Gestão de tráfego pago</li>
+          <li>Relatórios e análise de dados</li>
+          <li>Squad TGT compartilhado</li>
+        </ul>
+      </div>
+      <div class="compare-col now">
+        <span class="tag-mini" style="opacity:.9">Agora · 2026</span>
+        <h3>Marketing Estratégico Full Service</h3>
+        <ul>
+          <li>Estratégia de marca e planejamento de campanhas</li>
+          <li>Digital, social, performance e audiovisual ampliados</li>
+          <li>Direção de arte e design gráfico (on/off)</li>
+          <li>Criação e gestão de website</li>
+          <li>Materiais offline, trade marketing e PDV</li>
+          <li>Apoio à embalagem e a lançamentos</li>
+          <li>Materiais comerciais, institucionais e para distribuidores</li>
+          <li>Célula dedicada + AV compartilhado</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-foot">
+    <span>Grupo De Marchi × TGTstudio</span>
+    <span class="num">03 / 16</span>
+  </div>
+</section>
+
+<!-- ====================================== -->
+<!-- SLIDE 4 — A OPORTUNIDADE                -->
+<!-- ====================================== -->
+<section class="slide bg-cream" data-slide="4">
+  <div class="slide-head">
+    <div class="logo" style="color:var(--tgt-red)">TGT<small style="color:var(--tgt-black)">A AGÊNCIA<br>ALÉM DO MARKETING</small></div>
+    <div class="meta">04 · Oportunidade</div>
+  </div>
+
+  <div class="content" style="margin-top:4vh">
+    <span class="eyebrow">A oportunidade</span>
+    <h2 class="h-display" style="max-width:1100px;margin:14px 0 8px">
+      A De Marchi tem <em style="font-style:normal;color:var(--tgt-red)">ativos demais</em> sendo trabalhados em frentes isoladas.
+    </h2>
+    <p class="body" style="font-size:17px;max-width:780px;opacity:.75;margin-bottom:20px">
+      Quando marca, produto, trade, comercial e digital trabalham juntos, cada entrega passa a gerar mais valor — e cada conteúdo produzido rende em mais pontos de contato.
+    </p>
+
+    <div class="opp-grid">
+      <div class="opp-card">
+        <span class="num">01</span>
+        <h4>Portfólio amplo de produtos</h4>
+        <p>Congelados, frescos, açaí e linha de bombons. Cada categoria com uma história e um público próprio.</p>
+      </div>
+      <div class="opp-card">
+        <span class="num">02</span>
+        <h4>Autoridade B2B + Desejo B2C</h4>
+        <p>De Marchi institucional e Açaí Sport jovem. Duas vozes, um propósito: levar o melhor da natureza ao mundo.</p>
+      </div>
+      <div class="opp-card">
+        <span class="num">03</span>
+        <h4>Trade e canais sub-aproveitados</h4>
+        <p>Distribuidores, varejo e food service pedem materiais consistentes e velocidade de execução.</p>
+      </div>
+      <div class="opp-card">
+        <span class="num">04</span>
+        <h4>Praticidade & Saudabilidade</h4>
+        <p>O posicionamento já existe. Falta amplificá-lo em campanhas, embalagens e ponto de venda.</p>
+      </div>
+      <div class="opp-card">
+        <span class="num">05</span>
+        <h4>Histórico de marca raro</h4>
+        <p>De 1930, Jundiaí, raízes italianas. Patrimônio narrativo que pede aplicação em múltiplos canais.</p>
+      </div>
+      <div class="opp-card">
+        <span class="num">06</span>
+        <h4>Lançamentos sem suporte 360°</h4>
+        <p>Produtos chegam ao mercado sem o aparato completo de comunicação que sua qualidade merece.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-foot">
+    <span>Grupo De Marchi × TGTstudio</span>
+    <span class="num">04 / 16</span>
+  </div>
+</section>
+
+<!-- ====================================== -->
+<!-- SLIDE 5 — NÚCLEO INTEGRADO              -->
+<!-- ====================================== -->
+<section class="slide bg-dark grain" data-slide="5">
+  <div class="slide-head">
+    <div class="logo">TGT<small>A AGÊNCIA<br>ALÉM DO MARKETING</small></div>
+    <div class="meta">05 · O Modelo</div>
+  </div>
+
+  <div class="content" style="margin-top:4vh">
+    <span class="eyebrow">O novo modelo TGT</span>
+    <h2 class="h-display" style="max-width:1200px;margin:14px 0 28px">
+      Uma <em style="font-style:normal;color:var(--tgt-red)">célula de marketing</em> integrada para o Grupo De Marchi.
+    </h2>
+
+    <div class="nucleus">
+      <div>
+        <p class="body" style="font-size:16px;line-height:1.55;margin-bottom:22px">
+          Mais do que executar peças, o novo modelo organiza demandas, conecta objetivos e <strong>transforma comunicação em ferramenta de crescimento</strong>.
+        </p>
+        <p class="body" style="font-size:15px;line-height:1.55;opacity:.7">
+          De Marchi deixa de ter fornecedores de peças avulsas e passa a contar com um time pensando o negócio — com visão de marca, canal, produto e execução.
+        </p>
+        <div style="margin-top:28px;display:flex;flex-direction:column;gap:6px">
+          <span class="eyebrow" style="color:var(--tgt-cream);opacity:.6">Capacidade dedicada</span>
+          <span class="display-tight" style="font-size:54px;color:var(--tgt-red)">210h<span style="font-size:.5em;color:var(--tgt-cream);opacity:.8">/mês</span></span>
+          <span style="font-size:13px;opacity:.6">+ banda compartilhada de audiovisual até 220h</span>
+        </div>
+      </div>
+
+      <div class="nucleus-vis">
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;gap:14px">
+          <div style="text-align:center;margin-bottom:6px">
+            <span class="tag red">Núcleo Dedicado De Marchi</span>
+          </div>
+          <div class="roles">
+            <div class="role"><span class="lbl">Atendimento</span><span class="desc">Gestão de conta e fluxo</span></div>
+            <div class="role"><span class="lbl">Planejamento</span><span class="desc">Estratégia e roadmap</span></div>
+            <div class="role"><span class="lbl">Conteúdo</span><span class="desc">Redação e narrativa</span></div>
+            <div class="role"><span class="lbl">Design</span><span class="desc">Direção de arte 360°</span></div>
+            <div class="role" style="grid-column:span 2"><span class="lbl">Performance · Mídia · Dados</span><span class="desc">Tráfego, BI e otimização contínua</span></div>
+            <div class="role av">
+              <span class="lbl">+ Time Audiovisual Compartilhado</span>
+              <span class="desc">Direção de produção · Captação · Fotografia · Edição · Finalização</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-foot">
+    <span>Grupo De Marchi × TGTstudio</span>
+    <span class="num">05 / 16</span>
+  </div>
+</section>
+
+<!-- ====================================== -->
+<!-- SLIDE 6 — ESCOPO 360° DM                -->
+<!-- ====================================== -->
+<section class="slide bg-cream" data-slide="6">
+  <div class="slide-head">
+    <div class="logo" style="color:var(--tgt-red)">TGT<small style="color:var(--tgt-black)">A AGÊNCIA<br>ALÉM DO MARKETING</small></div>
+    <div class="meta">06 · Escopo De Marchi</div>
+  </div>
+
+  <div class="content" style="margin-top:3vh">
+    <span class="eyebrow">Escopo 360° · De Marchi Alimentos</span>
+    <h2 class="h-display" style="max-width:1100px;margin:12px 0 22px">
+      Sete pilares para um <em style="font-style:normal;color:var(--tgt-red)">único organismo</em> de marketing.
+    </h2>
+
+    <div class="pillars pillars-7">
+      <div class="pillar">
+        <div class="head">
+          <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 12l3-9 3 9 3-3 3 3 3-9 3 9"/></svg></span>
+          <h4>Estratégia & Marca</h4>
+        </div>
+        <ul>
+          <li>Planejamento mensal</li>
+          <li>Campanhas e narrativas</li>
+          <li>Posicionamento de categorias</li>
+          <li>Direcionamento de comunicação</li>
+        </ul>
+      </div>
+      <div class="pillar">
+        <div class="head">
+          <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="12" cy="12" r="3"/></svg></span>
+          <h4>Digital & Social</h4>
+        </div>
+        <ul>
+          <li>Conteúdo orgânico DM + Açaí Sport</li>
+          <li>Calendário editorial</li>
+          <li>Campanhas digitais e mídia paga</li>
+          <li>Comunidade e relatórios</li>
+        </ul>
+      </div>
+      <div class="pillar pillar-highlight">
+        <div class="head">
+          <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="M2 9h20 M6 6.5h.01 M9 6.5h.01"/></svg></span>
+          <h4>Web & Plataformas <span style="font-size:9px;background:var(--tgt-red);color:#fff;padding:3px 6px;border-radius:3px;letter-spacing:.1em;margin-left:4px;vertical-align:middle">NOVO</span></h4>
+        </div>
+        <ul>
+          <li>Criação e evolução do website</li>
+          <li>Gestão e atualização de conteúdo</li>
+          <li>Páginas de produto e campanha</li>
+          <li>SEO, performance e mensuração</li>
+        </ul>
+      </div>
+      <div class="pillar">
+        <div class="head">
+          <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2v20M2 12h20"/></svg></span>
+          <h4>Design & Comunicação</h4>
+        </div>
+        <ul>
+          <li>Peças digitais e offline</li>
+          <li>Materiais institucionais</li>
+          <li>Apresentações comerciais</li>
+          <li>Apoio criativo às áreas</li>
+        </ul>
+      </div>
+      <div class="pillar">
+        <div class="head">
+          <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 3h18v18H3z M3 9h18 M9 9v12"/></svg></span>
+          <h4>Trade & Canais</h4>
+        </div>
+        <ul>
+          <li>Materiais para ponto de venda</li>
+          <li>Apoio a distribuidores</li>
+          <li>Sell-in e sell-out</li>
+          <li>Suporte ao varejo</li>
+        </ul>
+      </div>
+      <div class="pillar">
+        <div class="head">
+          <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 2l-2 4v14h16V6l-2-4z M4 6h16 M10 11h4"/></svg></span>
+          <h4>Embalagens & Produtos</h4>
+        </div>
+        <ul>
+          <li>Apoio visual a packs</li>
+          <li>Materiais de lançamento</li>
+          <li>Comunicação de diferenciais</li>
+          <li>Desdobramentos por SKU</li>
+        </ul>
+      </div>
+      <div class="pillar">
+        <div class="head">
+          <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="5 3 19 12 5 21 5 3"/></svg></span>
+          <h4>Audiovisual Ampliado</h4>
+        </div>
+        <ul>
+          <li>Captação, edição e finalização</li>
+          <li>Verticais e institucionais</li>
+          <li>Vídeos comerciais e campanha</li>
+          <li>Reels, YouTube e materiais B2B</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-foot">
+    <span>Grupo De Marchi × TGTstudio</span>
+    <span class="num">06 / 16</span>
+  </div>
+</section>
+
+<!-- ====================================== -->
+<!-- SLIDE 7 — O QUE DE MARCHI GANHA         -->
+<!-- ====================================== -->
+<section class="slide bg-dark grain" data-slide="7">
+  <div class="slide-head">
+    <div class="logo">TGT<small>A AGÊNCIA<br>ALÉM DO MARKETING</small></div>
+    <div class="meta">07 · Valor percebido</div>
+  </div>
+
+  <div class="content" style="margin-top:4vh">
+    <span class="eyebrow">O que a De Marchi ganha</span>
+    <h2 class="h-display" style="max-width:1100px;margin:14px 0 8px">
+      Menos peças soltas. <em style="font-style:normal;color:var(--tgt-red)">Mais marca em movimento.</em>
+    </h2>
+
+    <div class="benefits">
+      <div class="benefit"><span class="plus">+</span><h5>Consistência de marca</h5><p>Mesma voz em todos os pontos de contato.</p></div>
+      <div class="benefit"><span class="plus">+</span><h5>Velocidade de resposta</h5><p>Time pronto, sem curva de aprendizado.</p></div>
+      <div class="benefit"><span class="plus">+</span><h5>Menos ruído entre áreas</h5><p>Uma agência conversando com marketing, comercial e produto.</p></div>
+      <div class="benefit"><span class="plus">+</span><h5>Aproveitamento de conteúdo</h5><p>Cada captação rende em múltiplos canais.</p></div>
+      <div class="benefit"><span class="plus">+</span><h5>Lançamentos com força</h5><p>Roteiro completo: marca, mídia, trade, PDV.</p></div>
+      <div class="benefit"><span class="plus">+</span><h5>Apoio ao comercial</h5><p>Apresentações, materiais e campanhas de canal.</p></div>
+      <div class="benefit"><span class="plus">+</span><h5>Presença on + off</h5><p>Digital, varejo e relacionamento institucional.</p></div>
+      <div class="benefit"><span class="plus">+</span><h5>Inteligência aplicada</h5><p>Dados que viram decisão e próxima ação.</p></div>
+    </div>
+
+    <p class="body" style="font-size:15px;opacity:.7;max-width:780px;margin-top:14px">
+      O cliente — varejo, distribuidor, consumidor — passa a perceber uma só De Marchi, coerente, em qualquer lugar onde a marca aparece.
+    </p>
+  </div>
+
+  <div class="slide-foot">
+    <span>Grupo De Marchi × TGTstudio</span>
+    <span class="num">07 / 16</span>
+  </div>
+</section>
+
+<!-- ====================================== -->
+<!-- SLIDE 8 — EVOLUÇÃO DE HORAS             -->
+<!-- ====================================== -->
+<section class="slide bg-cream" data-slide="8">
+  <div class="slide-head">
+    <div class="logo" style="color:var(--tgt-red)">TGT<small style="color:var(--tgt-black)">A AGÊNCIA<br>ALÉM DO MARKETING</small></div>
+    <div class="meta">08 · Evolução</div>
+  </div>
+
+  <div class="content" style="margin-top:4vh">
+    <span class="eyebrow">Evolução de horas e estrutura</span>
+    <h2 class="h-display" style="max-width:1100px;margin:14px 0 8px">
+      <em style="font-style:normal;color:var(--tgt-red)">+90 horas/mês</em> de operação dedicada. Mais estratégia, mais criação, mais execução.
+    </h2>
+
+    <div class="hours-compare">
+      <div class="hours-card">
+        <div>
+          <span class="lbl">Modelo Anterior · 2025</span>
+          <div class="big" style="color:var(--tgt-black)">120<span class="unit" style="display:inline">h/mês</span></div>
+        </div>
+        <div class="breakdown">
+          <div><span class="dot-sm"></span>Foco em digital e social media</div>
+          <div><span class="dot-sm"></span>Audiovisual pontual</div>
+          <div><span class="dot-sm"></span>Tráfego e relatórios</div>
+        </div>
+        <div>
+          <span class="lbl" style="display:block;margin-bottom:4px">Fee mensal</span>
+          <div class="fee">R$ 10.330,00</div>
+        </div>
+      </div>
+
+      <div class="hours-card new">
+        <div>
+          <span class="lbl">Novo Modelo · 2026</span>
+          <div class="big">210<span class="unit" style="display:inline;color:#fff;opacity:.6">h/mês</span></div>
+        </div>
+        <div class="breakdown">
+          <div><span class="dot-sm" style="background:#fff"></span>Marketing 360° full service</div>
+          <div><span class="dot-sm" style="background:#fff"></span>Núcleo dedicado + AV compartilhado (até 220h)</div>
+          <div><span class="dot-sm" style="background:#fff"></span>Capacidade estratégica, criativa e operacional</div>
+        </div>
+        <div>
+          <span class="lbl" style="display:block;margin-bottom:4px;color:#fff;opacity:.7">Novo investimento</span>
+          <div class="fee" style="color:var(--tgt-red)">R$ 17.822,00</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-foot">
+    <span>Grupo De Marchi × TGTstudio</span>
+    <span class="num">08 / 16</span>
+  </div>
+</section>
+
+<!-- ====================================== -->
+<!-- SLIDE 9 — INVESTIMENTO DM               -->
+<!-- ====================================== -->
+<section class="slide bg-dark grain" data-slide="9">
+  <div class="slide-head">
+    <div class="logo">TGT<small>A AGÊNCIA<br>ALÉM DO MARKETING</small></div>
+    <div class="meta">09 · Investimento</div>
+  </div>
+
+  <span class="red-circle r3" style="right:6vw;top:8vh;opacity:.7"></span>
+  <span class="red-circle r1" style="right:12vw;top:18vh"></span>
+
+  <div class="content" style="margin-top:4vh">
+    <span class="eyebrow">Investimento mensal — De Marchi Alimentos</span>
+    <h2 class="h-display" style="max-width:900px;margin:14px 0 30px">
+      A nova estrutura.<br>O novo <em style="font-style:normal;color:var(--tgt-red)">patamar.</em>
+    </h2>
+
+    <div class="invest">
+      <div class="invest-value">
+        <span class="price-prefix">Fee mensal · full service</span>
+        <div class="price">R$ 17.822<span style="font-size:.4em;color:var(--tgt-cream)">,00</span></div>
+        <span class="month">/mês · contrato mensal</span>
+        <p class="body" style="font-size:14.5px;max-width:480px;margin-top:18px;opacity:.78;line-height:1.55">
+          Este modelo amplia a capacidade da De Marchi de transformar oportunidades em entregas consistentes, rápidas e conectadas ao negócio.
+        </p>
+      </div>
+
+      <div class="invest-detail">
+        <div class="item"><span class="ic">1</span><div><h5>Atuação full service 360°</h5><p>Marca, digital, design, trade, comercial, audiovisual e web sob a mesma direção.</p></div></div>
+        <div class="item"><span class="ic">2</span><div><h5>210h/mês de operação dedicada</h5><p>+ banda audiovisual compartilhada de até 220h/mês quando necessário.</p></div></div>
+        <div class="item"><span class="ic">3</span><div><h5>Núcleo dedicado de 5 integrantes</h5><p>Atendimento, planejamento, conteúdo, design, performance.</p></div></div>
+        <div class="item"><span class="ic">4</span><div><h5>Criação e gestão do website</h5><p>Evolução contínua do site, páginas de produto, campanhas e SEO.</p></div></div>
+        <div class="item"><span class="ic">5</span><div><h5>Time audiovisual compartilhado</h5><p>Direção, captação, foto, edição e finalização sob demanda.</p></div></div>
+        <div class="item"><span class="ic">6</span><div><h5>Planejamento, execução e análise</h5><p>Reuniões mensais, relatórios e governança de horas.</p></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-foot">
+    <span>Grupo De Marchi × TGTstudio</span>
+    <span class="num">09 / 16</span>
+  </div>
+</section>
+
+<!-- ====================================== -->
+<!-- SLIDE 10 — FAZENDA INTRO                -->
+<!-- ====================================== -->
+<section class="slide bg-dark grain" data-slide="10">
+  <div class="slide-head">
+    <div class="logo">TGT<small>A AGÊNCIA<br>ALÉM DO MARKETING</small></div>
+    <div class="meta">10 · Nova Frente</div>
+  </div>
+
+  <div class="content" style="margin-top:4vh">
+    <span class="eyebrow"><span class="dot"></span>Fazenda Irmãos De Marchi · Fazenda São Judas Tadeu</span>
+    <h2 class="h-display" style="max-width:1100px;margin:14px 0 22px">
+      Uma marca <em style="font-style:normal;color:var(--tgt-red)">técnica</em> que precisa nascer clara, confiável e memorável.
+    </h2>
+
+    <div class="farm-grid">
+      <div>
+        <p class="body" style="font-size:16.5px;line-height:1.55;max-width:620px">
+          O projeto da Fazenda Irmãos De Marchi tem foco em <strong>aprimoramento genético, fertilização e inseminação pecuária</strong>. É uma frente com autoridade técnica, exigências comerciais próprias e potencial real de se tornar referência em seu segmento.
+        </p>
+        <p class="body" style="font-size:15px;line-height:1.55;max-width:620px;margin-top:14px;opacity:.78">
+          Esta não é uma extensão da De Marchi Alimentos. É uma marca com identidade própria, relevância técnica e mercado especializado. Por isso, precisa de uma operação dedicada — branding, conteúdo, audiovisual e digital pensados para construir reputação.
+        </p>
+        <div class="farm-tags">
+          <span class="farm-tag">Genética</span>
+          <span class="farm-tag">Inseminação</span>
+          <span class="farm-tag">Fertilização</span>
+          <span class="farm-tag">Pecuária técnica</span>
+          <span class="farm-tag">Autoridade B2B</span>
+          <span class="farm-tag">Construção de marca</span>
+        </div>
+      </div>
+
+      <div class="farm-vis">
+        <div class="farm-mono">
+          FAZENDA<br><span>IRMÃOS<br>DE MARCHI</span>
+        </div>
+        <span class="red-circle r2" style="right:18%;top:18%"></span>
+        <span class="red-circle r1" style="left:14%;bottom:22%"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-foot">
+    <span>Grupo De Marchi × TGTstudio</span>
+    <span class="num">10 / 16</span>
+  </div>
+</section>
+
+<!-- ====================================== -->
+<!-- SLIDE 11 — ESCOPO FAZENDA               -->
+<!-- ====================================== -->
+<section class="slide bg-cream" data-slide="11">
+  <div class="slide-head">
+    <div class="logo" style="color:var(--tgt-red)">TGT<small style="color:var(--tgt-black)">A AGÊNCIA<br>ALÉM DO MARKETING</small></div>
+    <div class="meta">11 · Escopo Fazenda</div>
+  </div>
+
+  <div class="content" style="margin-top:3vh">
+    <span class="eyebrow">Escopo · Fazenda Irmãos De Marchi</span>
+    <h2 class="h-display" style="max-width:1100px;margin:12px 0 24px">
+      Do <em style="font-style:normal;color:var(--tgt-red)">zero ao reconhecimento</em> em cinco frentes.
+    </h2>
+
+    <div class="pillars pillars-5">
+      <div class="pillar">
+        <div class="head">
+          <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg></span>
+          <h4>Branding</h4>
+        </div>
+        <ul>
+          <li>Criação de logomarca</li>
+          <li>Identidade visual completa</li>
+          <li>Manual de marca</li>
+          <li>Posicionamento e tom de voz</li>
+        </ul>
+      </div>
+      <div class="pillar">
+        <div class="head">
+          <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 3l18 18 M21 3L3 21"/></svg></span>
+          <h4>Marketing Digital</h4>
+        </div>
+        <ul>
+          <li>Estratégia de conteúdo</li>
+          <li>Gestão de redes sociais</li>
+          <li>Conteúdo orgânico e pago</li>
+          <li>Relatórios e otimização</li>
+        </ul>
+      </div>
+      <div class="pillar pillar-highlight">
+        <div class="head">
+          <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="M2 9h20 M6 6.5h.01 M9 6.5h.01"/></svg></span>
+          <h4>Web & Plataformas</h4>
+        </div>
+        <ul>
+          <li>Criação do website institucional</li>
+          <li>Gestão e atualização contínua</li>
+          <li>Páginas de autoridade técnica</li>
+          <li>SEO e mensuração</li>
+        </ul>
+      </div>
+      <div class="pillar">
+        <div class="head">
+          <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="5 3 19 12 5 21 5 3"/></svg></span>
+          <h4>Audiovisual</h4>
+        </div>
+        <ul>
+          <li>Captação de fotos e vídeos</li>
+          <li>Conteúdos institucionais</li>
+          <li>Conteúdos técnicos</li>
+          <li>Materiais de autoridade</li>
+        </ul>
+      </div>
+      <div class="pillar">
+        <div class="head">
+          <span class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 3h7v7H3z M14 3h7v7h-7z M3 14h7v7H3z M14 14h7v7h-7z"/></svg></span>
+          <h4>Comercial</h4>
+        </div>
+        <ul>
+          <li>Materiais de apoio</li>
+          <li>Apresentações comerciais</li>
+          <li>Conteúdo de relacionamento</li>
+          <li>Comunicação de diferenciais</li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="body" style="font-size:14.5px;margin-top:18px;opacity:.7;max-width:880px">
+      Uma marca técnica precisa traduzir conhecimento em confiança. A TGT entra para fazer essa ponte: do laboratório, da pista e do campo para a percepção do mercado.
+    </p>
+  </div>
+
+  <div class="slide-foot">
+    <span>Grupo De Marchi × TGTstudio</span>
+    <span class="num">11 / 16</span>
+  </div>
+</section>
+
+<!-- ====================================== -->
+<!-- SLIDE 12 — INVESTIMENTO FAZENDA         -->
+<!-- ====================================== -->
+<section class="slide bg-dark grain" data-slide="12">
+  <div class="slide-head">
+    <div class="logo">TGT<small>A AGÊNCIA<br>ALÉM DO MARKETING</small></div>
+    <div class="meta">12 · Investimento Fazenda</div>
+  </div>
+
+  <span class="red-circle r3" style="left:6vw;bottom:14vh;opacity:.5"></span>
+
+  <div class="content" style="margin-top:4vh">
+    <span class="eyebrow">Investimento mensal — Fazenda Irmãos De Marchi</span>
+    <h2 class="h-display" style="max-width:1000px;margin:14px 0 22px">
+      Kick-off <em style="font-style:normal;color:var(--tgt-red)">estruturante</em>, depois ritmo de cruzeiro.
+    </h2>
+
+    <div class="phases">
+      <div class="phase phase-1">
+        <span class="phase-tag"><span class="pulse"></span>Meses 1 a 3 · Kick-off</span>
+        <span class="phase-period">Imersão e construção</span>
+        <div>
+          <div class="phase-price">R$ 7.200<span class="cents">,00</span></div>
+          <span class="phase-sub" style="opacity:.9">/mês · primeiros 3 meses</span>
+        </div>
+        <div class="phase-list">
+          <div class="it">Criação de logomarca e identidade visual</div>
+          <div class="it">Brandbook completo · posicionamento e tom de voz</div>
+          <div class="it">Criação do website institucional</div>
+          <div class="it">Captação inicial de audiovisual (foto e vídeo)</div>
+          <div class="it">Estruturação de redes e materiais comerciais base</div>
+        </div>
+      </div>
+
+      <div class="phase phase-2">
+        <span class="phase-tag"><span class="pulse"></span>Mês 4 em diante · Cruzeiro</span>
+        <span class="phase-period">Operação contínua</span>
+        <div>
+          <div class="phase-price">R$ 6.135<span class="cents">,00</span></div>
+          <span class="phase-sub" style="opacity:.85">/mês · contrato mensal recorrente</span>
+        </div>
+        <div class="phase-list">
+          <div class="it">Gestão e evolução do website</div>
+          <div class="it">Conteúdo orgânico e campanhas pagas</div>
+          <div class="it">Produção audiovisual contínua</div>
+          <div class="it">Materiais comerciais e de autoridade</div>
+          <div class="it">Relatórios, ajustes e construção de reputação</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="phase-note">
+      Os primeiros 3 meses concentram entregas estruturantes — <strong style="color:#fff">brandbook, identidade visual, website e captação audiovisual inicial</strong> — que exigem maior intensidade de operação e investimento criativo. A partir do 4º mês, a operação entra em regime de cruzeiro, com foco em gestão contínua, presença e construção de autoridade técnica.
+    </p>
+  </div>
+
+  <div class="slide-foot">
+    <span>Grupo De Marchi × TGTstudio</span>
+    <span class="num">12 / 16</span>
+  </div>
+</section>
+
+<!-- ====================================== -->
+<!-- SLIDE 13 — TABELA CONSOLIDADA           -->
+<!-- ====================================== -->
+<section class="slide bg-dark grain" data-slide="13">
+  <div class="slide-head">
+    <div class="logo">TGT<small>A AGÊNCIA<br>ALÉM DO MARKETING</small></div>
+    <div class="meta">13 · Visão Consolidada</div>
+  </div>
+
+  <div class="content" style="margin-top:4vh">
+    <span class="eyebrow">Visão consolidada de investimento</span>
+    <h2 class="h-display" style="max-width:1100px;margin:14px 0 8px">
+      Duas frentes, um <em style="font-style:normal;color:var(--tgt-red)">único</em> Grupo.
+    </h2>
+
+    <div class="table-wrap">
+      <div class="consol">
+        <div class="row head">
+          <div class="cell">Frente</div>
+          <div class="cell">Escopo</div>
+          <div class="cell">Horas/mês</div>
+          <div class="cell">Investimento</div>
+        </div>
+        <div class="row">
+          <div class="cell"><span class="pip"></span><strong>De Marchi Alimentos</strong></div>
+          <div class="cell">Marketing 360° full service + Web</div>
+          <div class="cell mono">210h</div>
+          <div class="cell price">R$ 17.822,00</div>
+        </div>
+        <div class="row">
+          <div class="cell"><span class="pip"></span><strong>Fazenda Irmãos De Marchi</strong></div>
+          <div class="cell">Branding + Marketing full service + Web</div>
+          <div class="cell mono">55–60h</div>
+          <div class="cell price">R$ 6.135,00</div>
+        </div>
+        <div class="row total">
+          <div class="cell">TOTAL MENSAL CONSOLIDADO</div>
+          <div class="cell">Estrutura integrada Grupo De Marchi</div>
+          <div class="cell mono">~270h</div>
+          <div class="cell price">R$ 23.957,00</div>
+        </div>
+      </div>
+      <div class="kickoff-note">
+        <span class="ko-tag">Kick-off · Meses 1 a 3</span>
+        <p class="ko-text">
+          Nos <strong style="color:#fff">primeiros 3 meses</strong>, o investimento na Fazenda passa para <strong style="color:#fff">R$ 7.200/mês</strong> — incluindo brandbook, identidade visual, website e captação audiovisual inicial. A partir do 4º mês, retorna ao regime cruzeiro acima.
+        </p>
+        <div class="ko-price">
+          R$ 25.022,00
+          <small>Total mensal · Meses 1-3</small>
+        </div>
+      </div>
+      <p class="table-note">
+        Os investimentos refletem a criação de uma estrutura integrada, com maior previsibilidade, governança, capacidade criativa e suporte estratégico para todas as frentes do Grupo. Mídia paga e produções audiovisuais especiais são cobradas à parte, conforme briefing.
+      </p>
+    </div>
+  </div>
+
+  <div class="slide-foot">
+    <span>Grupo De Marchi × TGTstudio</span>
+    <span class="num">13 / 16</span>
+  </div>
+</section>
+
+<!-- ====================================== -->
+<!-- SLIDE 14 — COMO VAMOS OPERAR            -->
+<!-- ====================================== -->
+<section class="slide bg-cream" data-slide="14">
+  <div class="slide-head">
+    <div class="logo" style="color:var(--tgt-red)">TGT<small style="color:var(--tgt-black)">A AGÊNCIA<br>ALÉM DO MARKETING</small></div>
+    <div class="meta">14 · Governança</div>
+  </div>
+
+  <div class="content" style="margin-top:3vh">
+    <span class="eyebrow">Como vamos operar</span>
+    <h2 class="h-display" style="max-width:1100px;margin:12px 0 8px">
+      Mais escopo, mais <em style="font-style:normal;color:var(--tgt-red)">clareza.</em> Mais entregas, mais ritmo.
+    </h2>
+    <p class="body" style="font-size:15px;opacity:.7;max-width:780px;margin-bottom:8px">
+      O modelo full service só funciona com planejamento. Por isso, a operação será orientada por visibilidade, priorização e decisão conjunta.
+    </p>
+
+    <div class="ops-flow">
+      <div class="ops-step">
+        <span class="step">01</span>
+        <h5>Reunião mensal de planejamento</h5>
+        <p>Alinhamento de prioridades, calendário e demandas das próximas 4 semanas.</p>
+      </div>
+      <div class="ops-step">
+        <span class="step">02</span>
+        <h5>Calendário de entregas</h5>
+        <p>Organização por urgência, impacto e frente de trabalho. Visível para ambos os lados.</p>
+      </div>
+      <div class="ops-step">
+        <span class="step">03</span>
+        <h5>Execução e check-ins</h5>
+        <p>Reuniões rápidas quando necessário. Andamento das frentes sempre transparente.</p>
+      </div>
+      <div class="ops-step">
+        <span class="step">04</span>
+        <h5>Relatórios e revisão</h5>
+        <p>Resultados, recomendações e próximos passos. O ciclo recomeça mais inteligente.</p>
+      </div>
+    </div>
+
+    <p class="body" style="font-size:14.5px;opacity:.7;margin-top:8px">
+      <strong>Gestão de horas, frentes priorizadas e governança compartilhada</strong> — os pilares para que escopo amplo não vire desorganização.
+    </p>
+  </div>
+
+  <div class="slide-foot">
+    <span>Grupo De Marchi × TGTstudio</span>
+    <span class="num">14 / 16</span>
+  </div>
+</section>
+
+<!-- ====================================== -->
+<!-- SLIDE 15 — POR QUE TGT                  -->
+<!-- ====================================== -->
+<section class="slide bg-dark grain" data-slide="15">
+  <div class="slide-head">
+    <div class="logo">TGT<small>A AGÊNCIA<br>ALÉM DO MARKETING</small></div>
+    <div class="meta">15 · Por que TGT</div>
+  </div>
+
+  <div class="content" style="margin-top:4vh">
+    <span class="eyebrow">Por que a TGTstudio</span>
+    <h2 class="h-display" style="max-width:1100px;margin:14px 0 8px">
+      Já <em style="font-style:normal;color:var(--tgt-red)">conhecemos</em> a De Marchi. Já entendemos o jogo.
+    </h2>
+
+    <div class="why-grid">
+      <div>
+        <p class="body" style="font-size:16px;line-height:1.55;max-width:520px;margin-bottom:18px">
+          A TGT não chega do zero. Conhecemos os produtos, categorias, linguagem, distribuidores e desafios da De Marchi. Conhecemos o universo Açaí Sport e suas batalhas com Oakberry, Frooty e Sambazon. Isso reduz curva de aprendizado e aumenta eficiência desde o dia um.
+        </p>
+        <p class="handwriting" style="font-size:36px;color:var(--tgt-red);transform:rotate(-2deg);max-width:480px">
+          Ser agência vai além de criar campanhas.
+        </p>
+        <p class="body" style="font-size:14px;opacity:.6;max-width:480px;margin-top:6px">
+          É ter retidão nas relações, servir com propósito e caminhar junto com o cliente.
+        </p>
+      </div>
+
+      <div class="why-list">
+        <div class="why-item">
+          <span class="num">01</span>
+          <div><h5>Já conhece a De Marchi</h5><p>Produtos, categorias, linguagem, posicionamento e canais já mapeados.</p></div>
+        </div>
+        <div class="why-item">
+          <span class="num">02</span>
+          <div><h5>Une estratégia + execução</h5><p>Design, conteúdo, performance, audiovisual e gestão sob o mesmo teto.</p></div>
+        </div>
+        <div class="why-item">
+          <span class="num">03</span>
+          <div><h5>Atua em múltiplas frentes</h5><p>Capacidade real de operar B2B, B2C, trade, varejo e digital ao mesmo tempo.</p></div>
+        </div>
+        <div class="why-item">
+          <span class="num">04</span>
+          <div><h5>Transforma demanda solta em comunicação</h5><p>Cada pedido vira parte de uma narrativa maior — não peça isolada.</p></div>
+        </div>
+        <div class="why-item">
+          <span class="num">05</span>
+          <div><h5>Parceira, não fornecedora</h5><p>Visão estratégica de longo prazo, com a postura de quem está dentro do time.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-foot">
+    <span>Grupo De Marchi × TGTstudio</span>
+    <span class="num">15 / 16</span>
+  </div>
+</section>
+
+<!-- ====================================== -->
+<!-- SLIDE 16 — FECHAMENTO                   -->
+<!-- ====================================== -->
+<section class="slide bg-red grain" data-slide="16">
+  <div class="slide-head">
+    <div class="logo" style="color:#fff">TGT<small>A AGÊNCIA<br>ALÉM DO MARKETING</small></div>
+    <div class="meta">16 · Próximo Passo</div>
+  </div>
+
+  <svg class="cover-asterisk" style="color:#fff;opacity:.2;right:-4vw;top:-4vh;width:30vw" viewBox="0 0 100 100" aria-hidden="true">
+    <g fill="currentColor">
+      <rect x="46" y="0" width="8" height="100"/>
+      <rect x="0" y="46" width="100" height="8"/>
+      <rect x="46" y="0" width="8" height="100" transform="rotate(45 50 50)"/>
+      <rect x="46" y="0" width="8" height="100" transform="rotate(-45 50 50)"/>
+    </g>
+  </svg>
+
+  <div class="closing">
+    <span class="eyebrow" style="color:#fff">Uma nova fase do Grupo De Marchi</span>
+    <h2 class="display" style="font-size:clamp(40px,7vw,118px);line-height:.92;letter-spacing:-.035em">
+      De uma operação digital<br>
+      para uma <em>estrutura 360°</em>.
+    </h2>
+
+    <div class="arrows">
+      <div class="arrow-line">
+        <span class="from">demandas isoladas</span>
+        <svg width="28" height="14" viewBox="0 0 28 14" fill="none"><path d="M1 7h25m0 0L20 1m6 6l-6 6" stroke="#fff" stroke-width="2"/></svg>
+        <span class="to" style="color:#fff;font-weight:900">célula integrada</span>
+      </div>
+      <div class="arrow-line">
+        <span class="from">entregas pontuais</span>
+        <svg width="28" height="14" viewBox="0 0 28 14" fill="none"><path d="M1 7h25m0 0L20 1m6 6l-6 6" stroke="#fff" stroke-width="2"/></svg>
+        <span class="to" style="color:#fff;font-weight:900">construção contínua de valor</span>
+      </div>
+    </div>
+
+    <p class="body" style="font-size:16px;max-width:780px;opacity:.92;line-height:1.6;margin-top:14px">
+      A ampliação da parceria permite que o Grupo De Marchi conte com uma operação de marketing mais completa, integrada e preparada para apoiar marca, produtos, canais, trade, comercial e presença digital.
+    </p>
+
+    <a href="#" class="cta-btn" style="background:var(--tgt-black);margin-top:12px" onclick="return false">
+      Próximo passo: validação do modelo
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7h12m0 0L7 1m6 6l-6 6" stroke="#fff" stroke-width="2"/></svg>
+    </a>
+  </div>
+
+  <div class="slide-foot" style="color:#fff;opacity:.85">
+    <span>Grupo De Marchi × TGTstudio · Proposta 2026</span>
+    <span class="num" style="color:#fff">16 / 16</span>
+  </div>
+</section>
+
+</div>
+
+<!-- Controls -->
+<div class="controls">
+  <button class="ctrl-btn" id="prev" aria-label="Anterior">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+  </button>
+  <div class="progress"><span id="cur">01</span> <span style="opacity:.5">/ 16</span></div>
+  <button class="ctrl-btn" id="next" aria-label="Próximo">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+  </button>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  const cur = document.getElementById('cur');
+  let idx = 0;
+
+  function go(n){
+    if(n<0||n>=total) return;
+    slides.forEach((s,i)=>{
+      s.classList.remove('active','prev');
+      if(i<n) s.classList.add('prev');
+    });
+    slides[n].classList.add('active');
+    idx = n;
+    cur.textContent = String(n+1).padStart(2,'0');
+  }
+
+  document.getElementById('prev').addEventListener('click',()=>go(idx-1));
+  document.getElementById('next').addEventListener('click',()=>go(idx+1));
+
+  document.addEventListener('keydown',e=>{
+    if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' ') { e.preventDefault(); go(idx+1) }
+    if(e.key==='ArrowLeft'||e.key==='PageUp') { e.preventDefault(); go(idx-1) }
+    if(e.key==='Home') go(0);
+    if(e.key==='End') go(total-1);
+  });
+
+  // touch swipe
+  let sx=0;
+  document.addEventListener('touchstart',e=>sx=e.touches[0].clientX);
+  document.addEventListener('touchend',e=>{
+    const dx = e.changedTouches[0].clientX - sx;
+    if(Math.abs(dx)>60){ dx<0 ? go(idx+1) : go(idx-1) }
+  });
+</script>
+</body>
+</html>
