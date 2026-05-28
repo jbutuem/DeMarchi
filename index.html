@@ -83,12 +83,19 @@
     width:100%;margin-bottom:auto;flex-shrink:0;
   }
   .slide-head .logo{
-    font-family:'Archivo Black',sans-serif;font-size:18px;letter-spacing:-.04em;
-    color:var(--tgt-red);display:flex;align-items:center;gap:8px;
+    display:flex;align-items:center;gap:10px;
   }
-  .slide-head .logo small{font-family:'Archivo',sans-serif;font-weight:700;font-size:9px;color:inherit;text-transform:uppercase;letter-spacing:.16em;line-height:1.1;opacity:.85}
+  .tgt-logo-svg{
+    height:26px;width:auto;fill:var(--tgt-red);
+    flex-shrink:0;transition:fill .3s var(--ease);
+  }
+  /* Em fundo vermelho, logo vira preto */
+  .bg-red .tgt-logo-svg{fill:var(--tgt-black)}
+  .slide-head .logo small{font-family:'Archivo',sans-serif;font-weight:700;font-size:9px;color:var(--tgt-white);text-transform:uppercase;letter-spacing:.16em;line-height:1.1;opacity:.85}
+  .bg-cream .slide-head .logo small{color:var(--tgt-black)}
+  .bg-red .slide-head .logo small{color:var(--tgt-black);opacity:.85}
   .slide-head .meta{font-family:'Archivo',sans-serif;font-size:10px;text-transform:uppercase;letter-spacing:.2em;opacity:.7;font-weight:600}
-  .bg-cream .slide-head .meta, .bg-cream .slide-head .logo small{color:var(--tgt-black)}
+  .bg-cream .slide-head .meta{color:var(--tgt-black)}
   .bg-cream .slide-head .meta{opacity:.55}
 
   /* === FOOTER on each slide === */
@@ -419,6 +426,35 @@
   }
   .cta-btn:hover{transform:translateY(-2px)}
 
+  /* === Slide 16 — Come ToGeTher closing statement === */
+  .cta-final{
+    display:flex;align-items:center;gap:18px;margin-top:24px;
+    padding:18px 0;position:relative;
+  }
+  .cta-final-pre{
+    font-family:'Archivo Black',sans-serif;font-size:32px;line-height:1;
+    color:var(--tgt-black);
+  }
+  .cta-final-text{
+    font-family:'Archivo Black',sans-serif;
+    font-size:clamp(38px,5.4vw,82px);line-height:.95;letter-spacing:-.035em;
+    color:#fff;margin:0;
+  }
+  .cta-final-text .tgt-letter{
+    color:var(--tgt-black);
+    display:inline-block;
+  }
+  /* === Slide 16 (bg-red): contrast fixes === */
+  .bg-red .closing .display em{color:var(--tgt-black)}
+  .bg-red .arrow-line .from{
+    opacity:.78;color:#fff;
+    text-decoration-color:rgba(255,255,255,.85);
+    text-decoration-thickness:2px;
+  }
+  .bg-red .arrow-line .to{color:#fff}
+  .bg-red .eyebrow{color:#fff;opacity:.95}
+  .bg-red .closing .body{color:#fff}
+
   /* === SHARED DECORATIVE === */
   .red-circle{position:absolute;background:var(--tgt-red);border-radius:50%;pointer-events:none;z-index:0}
   .red-circle.r1{width:14px;height:14px}
@@ -482,7 +518,8 @@
 
     /* Header / footer compact */
     .slide-head{margin-bottom:18px}
-    .slide-head .logo{font-size:15px;gap:6px}
+    .tgt-logo-svg{height:20px}
+    .slide-head .logo{gap:8px}
     .slide-head .logo small{font-size:8px;display:none}
     .slide-head .meta{font-size:9px;letter-spacing:.18em}
     .slide-foot{padding-top:18px;font-size:9px;gap:10px;flex-wrap:wrap}
@@ -628,6 +665,9 @@
     .closing .display{font-size:clamp(32px,9vw,52px) !important}
     .arrow-line{font-size:13px;gap:8px;flex-wrap:wrap;justify-content:center}
     .cta-btn{font-size:12px;padding:16px 24px}
+    .cta-final{gap:12px;margin-top:18px;padding:8px 0;flex-wrap:wrap;justify-content:center;text-align:center}
+    .cta-final-pre{font-size:24px}
+    .cta-final-text{font-size:clamp(32px,9vw,48px)}
 
     /* === Controls === */
     .controls{
@@ -671,6 +711,18 @@
 </style>
 </head>
 <body>
+
+<!-- Logo TGT como symbol reutilizável -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="tgt-logo" viewBox="0 0 696.66 299.25">
+      <path d="M82.97,52.64v246.52h68.95V52.51h83.4v-31.49c12.87,13.69,26.41,24.26,41.78,32.44,15.28,8.13,31.57,13.32,48.54,16.68-2.21.79-4.32,1.19-6.43,1.59-103.71,19.64-158.04,129.65-115.74,223.43,1.36,3.02,3.07,4.11,6.42,4.08,21.31-.16,42.63-.07,63.94-.09,1.09,0,2.17-.2,3.81-.36-1.2-1.68-2.02-2.88-2.89-4.05-33.32-44.46-28.77-105.37,10.77-144.3,36.45-35.88,95.51-34.43,129.93,3.49,6.42,7.07,11.63,15.23,17.54,23.06,16.71-10.72,33.77-21.66,50.81-32.58-19.27-35.85-60.47-63.07-113.36-74.39,36.59-6.08,66.23-22.36,90.93-50.26v32.97h83.32v246.3h68.9V52.43h83.06V.21c-1.28-.08-2.24-.2-3.21-.2-96.58,0-193.16-.02-289.74.06-1.82,0-3.92.73-5.42,1.79-30.52,21.63-67.6,21.93-98.5.88-2.28-1.55-5.41-2.62-8.14-2.63C196.24-.02,100.83,0,5.41,0c-1.77,0-3.55,0-5.41,0v52.64h82.97ZM323.35,202.1c.42,1.17.59,1.81.87,2.38,8.5,17.31,17.08,34.57,25.44,51.94,1.38,2.88,3.31,3.13,5.96,3.13,24.64-.05,49.27-.03,73.91-.03,1.96,0,3.93,0,6.56,0-3.36,14.78-9.88,27.28-19.08,39.35,2.33.12,3.93.28,5.52.28,20.31.02,40.62-.09,60.93.1,3.8.04,5.51-1.33,6.96-4.71,8.11-18.87,12.52-38.57,13.11-59.02.32-11.06-.57-22.15-.92-33.42h-179.24Z"/>
+      <path d="M82.97,52.64H0V0c1.86,0,3.64,0,5.41,0C100.83,0,196.24-.02,291.65.11c2.74,0,5.87,1.08,8.14,2.63,30.9,21.05,67.98,20.75,98.5-.88,1.49-1.06,3.6-1.78,5.42-1.79C500.29,0,596.87,0,693.45.01c.96,0,1.93.12,3.21.2v52.22h-83.06v246.6h-68.9V52.73h-83.32V19.76c-24.7,27.89-54.33,44.17-90.93,50.26,52.89,11.32,94.09,38.54,113.36,74.39-17.04,10.93-34.1,21.87-50.81,32.58-5.9-7.83-11.12-15.99-17.54-23.06-34.42-37.92-93.49-39.37-129.93-3.49-39.54,38.93-44.09,99.84-10.77,144.3.87,1.16,1.69,2.36,2.89,4.05-1.63.16-2.72.36-3.81.36-21.31.02-42.63-.06-63.94.09-3.35.02-5.05-1.07-6.42-4.08-42.3-93.77,12.04-203.79,115.74-223.43,2.11-.4,4.21-.81,6.43-1.59-16.97-3.36-33.25-8.55-48.54-16.68-15.37-8.18-28.91-18.75-41.78-32.44v31.49h-83.4v246.64h-68.95V52.64Z"/>
+      <path d="M323.35,202.1h179.24c.35,11.27,1.25,22.37.92,33.42-.59,20.45-5,40.16-13.11,59.02-1.45,3.38-3.16,4.75-6.96,4.71-20.31-.19-40.62-.09-60.93-.1-1.6,0-3.19-.16-5.52-.28,9.2-12.07,15.72-24.57,19.08-39.35-2.63,0-4.59,0-6.56,0-24.64,0-49.27-.02-73.91.03-2.64,0-4.57-.25-5.96-3.13-8.36-17.37-16.94-34.64-25.44-51.94-.28-.58-.45-1.21-.87-2.38Z"/>
+    </symbol>
+  </defs>
+</svg>
+
 <div class="deck" id="deck">
 
 <!-- ====================================== -->
@@ -678,7 +730,7 @@
 <!-- ====================================== -->
 <section class="slide active bg-dark grain" data-slide="1">
   <div class="slide-head">
-    <div class="logo">TGT<small>A AGÊNCIA<br>ALÉM DO MARKETING</small></div>
+    <div class="logo"><svg class="tgt-logo-svg"><use href="#tgt-logo"/></svg><small>A AGÊNCIA<br>ALÉM DO MARKETING</small></div>
     <div class="meta">Proposta · 2026</div>
   </div>
 
@@ -719,7 +771,7 @@
 <!-- ====================================== -->
 <section class="slide bg-cream" data-slide="2">
   <div class="slide-head">
-    <div class="logo" style="color:var(--tgt-red)">TGT<small style="color:var(--tgt-black)">A AGÊNCIA<br>ALÉM DO MARKETING</small></div>
+    <div class="logo"><svg class="tgt-logo-svg"><use href="#tgt-logo"/></svg><small>A AGÊNCIA<br>ALÉM DO MARKETING</small></div>
     <div class="meta">02 · Contexto</div>
   </div>
 
@@ -766,7 +818,7 @@
 <!-- ====================================== -->
 <section class="slide bg-dark grain" data-slide="3">
   <div class="slide-head">
-    <div class="logo">TGT<small>A AGÊNCIA<br>ALÉM DO MARKETING</small></div>
+    <div class="logo"><svg class="tgt-logo-svg"><use href="#tgt-logo"/></svg><small>A AGÊNCIA<br>ALÉM DO MARKETING</small></div>
     <div class="meta">03 · A virada</div>
   </div>
 
@@ -820,7 +872,7 @@
 <!-- ====================================== -->
 <section class="slide bg-cream" data-slide="4">
   <div class="slide-head">
-    <div class="logo" style="color:var(--tgt-red)">TGT<small style="color:var(--tgt-black)">A AGÊNCIA<br>ALÉM DO MARKETING</small></div>
+    <div class="logo"><svg class="tgt-logo-svg"><use href="#tgt-logo"/></svg><small>A AGÊNCIA<br>ALÉM DO MARKETING</small></div>
     <div class="meta">04 · Oportunidade</div>
   </div>
 
@@ -878,7 +930,7 @@
 <!-- ====================================== -->
 <section class="slide bg-dark grain" data-slide="5">
   <div class="slide-head">
-    <div class="logo">TGT<small>A AGÊNCIA<br>ALÉM DO MARKETING</small></div>
+    <div class="logo"><svg class="tgt-logo-svg"><use href="#tgt-logo"/></svg><small>A AGÊNCIA<br>ALÉM DO MARKETING</small></div>
     <div class="meta">05 · O Modelo</div>
   </div>
 
@@ -935,7 +987,7 @@
 <!-- ====================================== -->
 <section class="slide bg-cream" data-slide="6">
   <div class="slide-head">
-    <div class="logo" style="color:var(--tgt-red)">TGT<small style="color:var(--tgt-black)">A AGÊNCIA<br>ALÉM DO MARKETING</small></div>
+    <div class="logo"><svg class="tgt-logo-svg"><use href="#tgt-logo"/></svg><small>A AGÊNCIA<br>ALÉM DO MARKETING</small></div>
     <div class="meta">06 · Escopo De Marchi</div>
   </div>
 
@@ -1044,7 +1096,7 @@
 <!-- ====================================== -->
 <section class="slide bg-dark grain" data-slide="7">
   <div class="slide-head">
-    <div class="logo">TGT<small>A AGÊNCIA<br>ALÉM DO MARKETING</small></div>
+    <div class="logo"><svg class="tgt-logo-svg"><use href="#tgt-logo"/></svg><small>A AGÊNCIA<br>ALÉM DO MARKETING</small></div>
     <div class="meta">07 · Valor percebido</div>
   </div>
 
@@ -1081,7 +1133,7 @@
 <!-- ====================================== -->
 <section class="slide bg-cream" data-slide="8">
   <div class="slide-head">
-    <div class="logo" style="color:var(--tgt-red)">TGT<small style="color:var(--tgt-black)">A AGÊNCIA<br>ALÉM DO MARKETING</small></div>
+    <div class="logo"><svg class="tgt-logo-svg"><use href="#tgt-logo"/></svg><small>A AGÊNCIA<br>ALÉM DO MARKETING</small></div>
     <div class="meta">08 · Evolução</div>
   </div>
 
@@ -1137,7 +1189,7 @@
 <!-- ====================================== -->
 <section class="slide bg-dark grain" data-slide="9">
   <div class="slide-head">
-    <div class="logo">TGT<small>A AGÊNCIA<br>ALÉM DO MARKETING</small></div>
+    <div class="logo"><svg class="tgt-logo-svg"><use href="#tgt-logo"/></svg><small>A AGÊNCIA<br>ALÉM DO MARKETING</small></div>
     <div class="meta">09 · Investimento</div>
   </div>
 
@@ -1182,7 +1234,7 @@
 <!-- ====================================== -->
 <section class="slide bg-dark grain" data-slide="10">
   <div class="slide-head">
-    <div class="logo">TGT<small>A AGÊNCIA<br>ALÉM DO MARKETING</small></div>
+    <div class="logo"><svg class="tgt-logo-svg"><use href="#tgt-logo"/></svg><small>A AGÊNCIA<br>ALÉM DO MARKETING</small></div>
     <div class="meta">10 · Nova Frente</div>
   </div>
 
@@ -1231,7 +1283,7 @@
 <!-- ====================================== -->
 <section class="slide bg-cream" data-slide="11">
   <div class="slide-head">
-    <div class="logo" style="color:var(--tgt-red)">TGT<small style="color:var(--tgt-black)">A AGÊNCIA<br>ALÉM DO MARKETING</small></div>
+    <div class="logo"><svg class="tgt-logo-svg"><use href="#tgt-logo"/></svg><small>A AGÊNCIA<br>ALÉM DO MARKETING</small></div>
     <div class="meta">11 · Escopo Fazenda</div>
   </div>
 
@@ -1320,7 +1372,7 @@
 <!-- ====================================== -->
 <section class="slide bg-dark grain" data-slide="12">
   <div class="slide-head">
-    <div class="logo">TGT<small>A AGÊNCIA<br>ALÉM DO MARKETING</small></div>
+    <div class="logo"><svg class="tgt-logo-svg"><use href="#tgt-logo"/></svg><small>A AGÊNCIA<br>ALÉM DO MARKETING</small></div>
     <div class="meta">12 · Investimento Fazenda</div>
   </div>
 
@@ -1382,7 +1434,7 @@
 <!-- ====================================== -->
 <section class="slide bg-dark grain" data-slide="13">
   <div class="slide-head">
-    <div class="logo">TGT<small>A AGÊNCIA<br>ALÉM DO MARKETING</small></div>
+    <div class="logo"><svg class="tgt-logo-svg"><use href="#tgt-logo"/></svg><small>A AGÊNCIA<br>ALÉM DO MARKETING</small></div>
     <div class="meta">13 · Visão Consolidada</div>
   </div>
 
@@ -1446,7 +1498,7 @@
 <!-- ====================================== -->
 <section class="slide bg-cream" data-slide="14">
   <div class="slide-head">
-    <div class="logo" style="color:var(--tgt-red)">TGT<small style="color:var(--tgt-black)">A AGÊNCIA<br>ALÉM DO MARKETING</small></div>
+    <div class="logo"><svg class="tgt-logo-svg"><use href="#tgt-logo"/></svg><small>A AGÊNCIA<br>ALÉM DO MARKETING</small></div>
     <div class="meta">14 · Governança</div>
   </div>
 
@@ -1498,7 +1550,7 @@
 <!-- ====================================== -->
 <section class="slide bg-dark grain" data-slide="15">
   <div class="slide-head">
-    <div class="logo">TGT<small>A AGÊNCIA<br>ALÉM DO MARKETING</small></div>
+    <div class="logo"><svg class="tgt-logo-svg"><use href="#tgt-logo"/></svg><small>A AGÊNCIA<br>ALÉM DO MARKETING</small></div>
     <div class="meta">15 · Por que TGT</div>
   </div>
 
@@ -1557,7 +1609,7 @@
 <!-- ====================================== -->
 <section class="slide bg-red grain" data-slide="16">
   <div class="slide-head">
-    <div class="logo" style="color:#fff">TGT<small>A AGÊNCIA<br>ALÉM DO MARKETING</small></div>
+    <div class="logo"><svg class="tgt-logo-svg"><use href="#tgt-logo"/></svg><small>A AGÊNCIA<br>ALÉM DO MARKETING</small></div>
     <div class="meta">16 · Próximo Passo</div>
   </div>
 
@@ -1594,10 +1646,12 @@
       A ampliação da parceria permite que o Grupo De Marchi conte com uma operação de marketing mais completa, integrada e preparada para apoiar marca, produtos, canais, trade, comercial e presença digital.
     </p>
 
-    <a href="#" class="cta-btn" style="background:var(--tgt-black);margin-top:12px" onclick="return false">
-      Próximo passo: validação do modelo
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7h12m0 0L7 1m6 6l-6 6" stroke="#fff" stroke-width="2"/></svg>
-    </a>
+    <div class="cta-final">
+      <span class="cta-final-pre">→</span>
+      <h3 class="cta-final-text">
+        Come <span class="tgt-letter">T</span>o<span class="tgt-letter">G</span>e<span class="tgt-letter">T</span>her.
+      </h3>
+    </div>
   </div>
 
   <div class="slide-foot" style="color:#fff;opacity:.85">
