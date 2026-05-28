@@ -507,23 +507,32 @@
   @media (max-width:768px){
     /* Allow scrolling inside each slide */
     .slide{
-      padding:22px 18px 100px;
+      padding:22px 18px 110px;
       overflow-y:auto;
       -webkit-overflow-scrolling:touch;
       transform:none !important;
+      display:flex;
+      flex-direction:column;
     }
     .slide:not(.active){display:none}
     .slide.active{display:flex}
-    .content{flex:initial}
+    .content{flex:initial;width:100%}
+
+    /* Hide all absolutely positioned decorative elements in mobile
+       to prevent overlapping with content on small screens */
+    .red-circle{display:none !important}
+    .cover-asterisk{display:none !important}
+    .ring{display:none !important}
 
     /* Header / footer compact */
-    .slide-head{margin-bottom:18px}
+    .slide-head{margin-bottom:18px;gap:12px}
     .tgt-logo-svg{height:20px}
-    .slide-head .logo{gap:8px}
+    .slide-head .logo{gap:8px;flex-shrink:0}
     .slide-head .logo small{font-size:8px;display:none}
-    .slide-head .meta{font-size:9px;letter-spacing:.18em}
-    .slide-foot{padding-top:18px;font-size:9px;gap:10px;flex-wrap:wrap}
-    .slide-foot .num{font-size:12px}
+    .slide-head .meta{font-size:9px;letter-spacing:.16em;text-align:right;line-height:1.3}
+    .slide-foot{padding-top:18px;font-size:8.5px;gap:10px;align-items:center}
+    .slide-foot > span:first-child{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .slide-foot .num{font-size:12px;flex-shrink:0}
 
     /* Typography */
     .cover-title{font-size:clamp(38px,11vw,60px);line-height:.92}
@@ -531,17 +540,19 @@
     .h-section{font-size:clamp(22px,6vw,30px)}
     .eyebrow{font-size:10px;letter-spacing:.18em}
 
-    /* Decorative elements — reduce or hide */
-    .cover-asterisk{width:90px;right:18px;top:64px}
-    .red-circle.r3{width:36px;height:36px}
-    .red-circle.r2{width:18px;height:18px}
-
-    /* === Slide 1 — Cover === */
-    .cover-grid{gap:18px}
-    .cover-strap{grid-template-columns:1fr;gap:18px}
+    /* === Slide 1 — Cover — break out of grid, allow natural flow === */
+    .cover-grid{
+      display:flex !important;
+      flex-direction:column;
+      gap:22px;
+      height:auto;
+      grid-template-rows:none;
+    }
+    .cover-title{margin:0 !important}
+    .cover-strap{grid-template-columns:1fr;gap:18px;margin-top:0}
     .cover-strap .lede{font-size:14px}
     .cover-strap .meta-block{justify-self:flex-start;align-items:flex-start;text-align:left;flex-direction:row;flex-wrap:wrap;gap:6px}
-    .cover-strap .meta-block .tag{align-self:flex-start}
+    .cover-strap .meta-block .tag{align-self:flex-start;transform:none}
     .tag{font-size:10px;padding:5px 8px}
 
     /* === Slide 2 — De onde partimos === */
@@ -564,8 +575,8 @@
 
     /* === Slide 5 — Núcleo === */
     .nucleus{grid-template-columns:1fr;gap:24px}
-    .nucleus-vis{min-height:auto;height:auto}
-    .nucleus-vis > div{position:relative !important;inset:auto !important}
+    .nucleus-vis{min-height:auto;height:auto;display:block !important}
+    .nucleus-vis > div{position:static !important;inset:auto !important;height:auto !important}
     .roles{grid-template-columns:1fr 1fr;gap:8px}
     .role{padding:12px 14px}
     .role .lbl{font-size:12px}
@@ -588,59 +599,66 @@
     /* === Slide 8 — Horas === */
     .hours-compare{grid-template-columns:1fr;gap:14px;margin-top:18px}
     .hours-card{padding:22px;gap:14px}
-    .hours-card .big{font-size:64px}
+    .hours-card .big{font-size:58px}
+    .hours-card .fee{font-size:20px}
 
     /* === Slide 9 / 12 — Investimento === */
     .invest{grid-template-columns:1fr;gap:28px}
-    .invest-value .price{font-size:64px}
-    .invest-value .price-prefix{font-size:13px;letter-spacing:.14em}
-    .invest-detail .item .ic{width:28px;height:28px;font-size:11px}
+    .invest-value .price{font-size:56px;line-height:.9}
+    .invest-value .price-prefix{font-size:12px;letter-spacing:.14em}
+    .invest-value .month{font-size:13px}
+    .invest-detail .item{padding:12px 0}
+    .invest-detail .item .ic{width:26px;height:26px;font-size:10.5px}
     .invest-detail .item h5{font-size:13.5px}
     .invest-detail .item p{font-size:11.5px}
 
     /* === Slide 10 — Fazenda intro === */
     .farm-grid{grid-template-columns:1fr;gap:22px}
     .farm-vis{min-height:200px}
-    .farm-mono{font-size:48px}
+    .farm-mono{font-size:46px}
     .farm-tag{font-size:11px;padding:6px 10px}
 
     /* === Slide 12 — Phases === */
     .phases{grid-template-columns:1fr;gap:14px}
     .phase{padding:22px 20px;gap:12px}
     .phase-period{font-size:18px}
-    .phase-price{font-size:52px}
+    .phase-price{font-size:46px;line-height:.9}
     .phase-sub{font-size:12px}
     .phase-list .it{font-size:12px}
 
-    /* === Slide 13 — Consolidated table → cards === */
+    /* === Slide 13 — Consolidated table → vertically stacked cards === */
     .table-wrap{margin-top:14px;gap:12px}
     .consol{display:flex;flex-direction:column;border:none;border-radius:0;gap:10px}
     .consol .row{
-      display:grid !important;grid-template-columns:1fr;gap:4px;
+      display:flex !important;flex-direction:column;gap:6px;
       background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);
       border-radius:8px;padding:14px 16px;
     }
     .consol .row.head{display:none !important}
     .consol .row.total{background:var(--tgt-red);border-color:var(--tgt-red)}
     .consol .cell{
-      padding:2px 0;border-bottom:none;
-      font-size:13px;display:flex;align-items:center;justify-content:space-between;gap:8px;
+      padding:0;border-bottom:none;
+      font-size:13px;display:flex;flex-direction:column;align-items:flex-start;gap:2px;
     }
-    .consol .cell:first-child{font-family:'Archivo Black',sans-serif;font-size:15px;letter-spacing:-.01em}
-    .consol .cell.price{font-size:18px;justify-content:flex-start;padding-top:6px}
-    .consol .row.total .cell.price{font-size:22px}
+    .consol .cell:first-child{
+      font-family:'Archivo Black',sans-serif;font-size:15px;letter-spacing:-.01em;
+      flex-direction:row;align-items:center;gap:8px;
+    }
+    .consol .cell.price{font-size:20px;padding-top:4px}
+    .consol .row.total .cell.price{font-size:24px}
     .consol .cell::before{
       content:attr(data-label);font-family:'Archivo',sans-serif;font-weight:700;
       font-size:9px;text-transform:uppercase;letter-spacing:.18em;opacity:.55;
     }
     .consol .cell:first-child::before,
     .consol .row.total .cell::before{display:none}
-    .consol .cell.price::before{
-      content:"Investimento";opacity:.55;
-    }
-    .consol .row.total .cell:first-child{font-size:13px;letter-spacing:.06em}
+    .consol .cell.price::before{content:"Investimento mensal"}
+    .consol .row.total .cell:first-child{font-size:12px;letter-spacing:.06em}
 
-    .kickoff-note{grid-template-columns:1fr;gap:10px;padding:16px;text-align:left}
+    .kickoff-note{
+      display:flex;flex-direction:column;align-items:flex-start;
+      gap:10px;padding:16px;text-align:left;
+    }
     .kickoff-note .ko-tag{align-self:flex-start;font-size:9px}
     .kickoff-note .ko-text{font-size:12.5px}
     .kickoff-note .ko-price{font-size:20px}
@@ -661,22 +679,22 @@
     .why-item .num{font-size:13px;min-width:24px}
 
     /* === Slide 16 — Closing === */
-    .closing{gap:18px}
+    .closing{gap:18px;flex:initial}
     .closing .display{font-size:clamp(32px,9vw,52px) !important}
     .arrow-line{font-size:13px;gap:8px;flex-wrap:wrap;justify-content:center}
     .cta-btn{font-size:12px;padding:16px 24px}
-    .cta-final{gap:12px;margin-top:18px;padding:8px 0;flex-wrap:wrap;justify-content:center;text-align:center}
-    .cta-final-pre{font-size:24px}
-    .cta-final-text{font-size:clamp(32px,9vw,48px)}
+    .cta-final{gap:10px;margin-top:18px;padding:8px 0;flex-wrap:wrap;justify-content:center;text-align:center}
+    .cta-final-pre{font-size:22px}
+    .cta-final-text{font-size:clamp(30px,9vw,46px)}
 
     /* === Controls === */
     .controls{
       bottom:14px;padding:8px 12px;gap:10px;
       width:auto;max-width:calc(100vw - 28px);
     }
-    .ctrl-btn{width:42px;height:42px}
-    .ctrl-btn svg{width:16px;height:16px}
-    .progress{font-size:13px;min-width:50px}
+    .ctrl-btn{width:40px;height:40px}
+    .ctrl-btn svg{width:15px;height:15px}
+    .progress{font-size:13px;min-width:46px}
   }
 
   /* ============================================ */
