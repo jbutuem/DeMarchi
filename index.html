@@ -2,7 +2,8 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1">
+<meta name="theme-color" content="#231F20">
 <title>TGT × Grupo De Marchi — Proposta 360°</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -29,7 +30,7 @@
   html,body{height:100%;background:var(--tgt-black);color:var(--tgt-white);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;overflow:hidden}
 
   /* === DECK STRUCTURE === */
-  .deck{position:relative;width:100vw;height:100vh;overflow:hidden}
+  .deck{position:relative;width:100vw;height:100vh;height:100dvh;overflow:hidden}
   .slide{
     position:absolute;inset:0;
     display:flex;flex-direction:column;
@@ -447,6 +448,218 @@
   @media (max-height:700px){
     .slide{padding:24px 32px}
     .compare-col li,.opp-card p,.benefit p,.pillar li,.ops-step p,.why-item p{font-size:11.5px}
+  }
+
+  /* ============================================ */
+  /* === RESPONSIVE — TABLET (≤ 1024px)         === */
+  /* ============================================ */
+  @media (max-width:1024px){
+    .slide{padding:32px 28px}
+    .cover-title{font-size:clamp(44px,8vw,90px)}
+    .h-display{font-size:clamp(32px,5.2vw,56px)}
+    .pillars-7{grid-template-columns:repeat(3,1fr)}
+    .pillars-5{grid-template-columns:repeat(3,1fr)}
+    .benefits{grid-template-columns:repeat(3,1fr)}
+    .ops-flow{grid-template-columns:repeat(2,1fr)}
+    .opp-grid{grid-template-columns:repeat(2,1fr)}
+    .cover-asterisk{width:160px}
+  }
+
+  /* ============================================ */
+  /* === RESPONSIVE — MOBILE (≤ 768px)          === */
+  /* ============================================ */
+  @media (max-width:768px){
+    /* Allow scrolling inside each slide */
+    .slide{
+      padding:22px 18px 100px;
+      overflow-y:auto;
+      -webkit-overflow-scrolling:touch;
+      transform:none !important;
+    }
+    .slide:not(.active){display:none}
+    .slide.active{display:flex}
+    .content{flex:initial}
+
+    /* Header / footer compact */
+    .slide-head{margin-bottom:18px}
+    .slide-head .logo{font-size:15px;gap:6px}
+    .slide-head .logo small{font-size:8px;display:none}
+    .slide-head .meta{font-size:9px;letter-spacing:.18em}
+    .slide-foot{padding-top:18px;font-size:9px;gap:10px;flex-wrap:wrap}
+    .slide-foot .num{font-size:12px}
+
+    /* Typography */
+    .cover-title{font-size:clamp(38px,11vw,60px);line-height:.92}
+    .h-display{font-size:clamp(26px,7.5vw,38px);line-height:1}
+    .h-section{font-size:clamp(22px,6vw,30px)}
+    .eyebrow{font-size:10px;letter-spacing:.18em}
+
+    /* Decorative elements — reduce or hide */
+    .cover-asterisk{width:90px;right:18px;top:64px}
+    .red-circle.r3{width:36px;height:36px}
+    .red-circle.r2{width:18px;height:18px}
+
+    /* === Slide 1 — Cover === */
+    .cover-grid{gap:18px}
+    .cover-strap{grid-template-columns:1fr;gap:18px}
+    .cover-strap .lede{font-size:14px}
+    .cover-strap .meta-block{justify-self:flex-start;align-items:flex-start;text-align:left;flex-direction:row;flex-wrap:wrap;gap:6px}
+    .cover-strap .meta-block .tag{align-self:flex-start}
+    .tag{font-size:10px;padding:5px 8px}
+
+    /* === Slide 2 — De onde partimos === */
+    .two-col{grid-template-columns:1fr;gap:22px}
+    .stack-card{font-size:13px;padding:14px 16px}
+    .stack-card .ic{width:24px;height:24px;font-size:11px}
+
+    /* === Slide 3 — Antes x Agora === */
+    .compare-grid{grid-template-columns:1fr;gap:14px;margin-top:18px}
+    .compare-col{padding:20px}
+    .compare-col h3{font-size:20px}
+    .compare-col li{font-size:13px}
+
+    /* === Slide 4 — Oportunidade === */
+    .opp-grid{grid-template-columns:1fr;gap:10px;margin-top:18px}
+    .opp-card{padding:18px}
+    .opp-card .num{font-size:20px}
+    .opp-card h4{font-size:15px}
+    .opp-card p{font-size:12.5px}
+
+    /* === Slide 5 — Núcleo === */
+    .nucleus{grid-template-columns:1fr;gap:24px}
+    .nucleus-vis{min-height:auto;height:auto}
+    .nucleus-vis > div{position:relative !important;inset:auto !important}
+    .roles{grid-template-columns:1fr 1fr;gap:8px}
+    .role{padding:12px 14px}
+    .role .lbl{font-size:12px}
+    .role .desc{font-size:10.5px}
+
+    /* === Slide 6 — Pilares (DM 7 pilares) === */
+    .pillars,.pillars-7,.pillars-5{grid-template-columns:1fr;gap:10px}
+    .pillars-7 .pillar,.pillars-5 .pillar,.pillar{padding:16px 18px}
+    .pillar h4,.pillars-7 .pillar h4,.pillars-5 .pillar h4{font-size:14.5px}
+    .pillar ul,.pillars-7 .pillar ul,.pillars-5 .pillar ul{font-size:12.5px}
+    .pillar .ic{width:30px;height:30px}
+
+    /* === Slide 7 — Benefícios === */
+    .benefits{grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}
+    .benefit{padding:16px 14px}
+    .benefit h5{font-size:13px}
+    .benefit p{font-size:11px}
+    .benefit .plus{font-size:18px}
+
+    /* === Slide 8 — Horas === */
+    .hours-compare{grid-template-columns:1fr;gap:14px;margin-top:18px}
+    .hours-card{padding:22px;gap:14px}
+    .hours-card .big{font-size:64px}
+
+    /* === Slide 9 / 12 — Investimento === */
+    .invest{grid-template-columns:1fr;gap:28px}
+    .invest-value .price{font-size:64px}
+    .invest-value .price-prefix{font-size:13px;letter-spacing:.14em}
+    .invest-detail .item .ic{width:28px;height:28px;font-size:11px}
+    .invest-detail .item h5{font-size:13.5px}
+    .invest-detail .item p{font-size:11.5px}
+
+    /* === Slide 10 — Fazenda intro === */
+    .farm-grid{grid-template-columns:1fr;gap:22px}
+    .farm-vis{min-height:200px}
+    .farm-mono{font-size:48px}
+    .farm-tag{font-size:11px;padding:6px 10px}
+
+    /* === Slide 12 — Phases === */
+    .phases{grid-template-columns:1fr;gap:14px}
+    .phase{padding:22px 20px;gap:12px}
+    .phase-period{font-size:18px}
+    .phase-price{font-size:52px}
+    .phase-sub{font-size:12px}
+    .phase-list .it{font-size:12px}
+
+    /* === Slide 13 — Consolidated table → cards === */
+    .table-wrap{margin-top:14px;gap:12px}
+    .consol{display:flex;flex-direction:column;border:none;border-radius:0;gap:10px}
+    .consol .row{
+      display:grid !important;grid-template-columns:1fr;gap:4px;
+      background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);
+      border-radius:8px;padding:14px 16px;
+    }
+    .consol .row.head{display:none !important}
+    .consol .row.total{background:var(--tgt-red);border-color:var(--tgt-red)}
+    .consol .cell{
+      padding:2px 0;border-bottom:none;
+      font-size:13px;display:flex;align-items:center;justify-content:space-between;gap:8px;
+    }
+    .consol .cell:first-child{font-family:'Archivo Black',sans-serif;font-size:15px;letter-spacing:-.01em}
+    .consol .cell.price{font-size:18px;justify-content:flex-start;padding-top:6px}
+    .consol .row.total .cell.price{font-size:22px}
+    .consol .cell::before{
+      content:attr(data-label);font-family:'Archivo',sans-serif;font-weight:700;
+      font-size:9px;text-transform:uppercase;letter-spacing:.18em;opacity:.55;
+    }
+    .consol .cell:first-child::before,
+    .consol .row.total .cell::before{display:none}
+    .consol .cell.price::before{
+      content:"Investimento";opacity:.55;
+    }
+    .consol .row.total .cell:first-child{font-size:13px;letter-spacing:.06em}
+
+    .kickoff-note{grid-template-columns:1fr;gap:10px;padding:16px;text-align:left}
+    .kickoff-note .ko-tag{align-self:flex-start;font-size:9px}
+    .kickoff-note .ko-text{font-size:12.5px}
+    .kickoff-note .ko-price{font-size:20px}
+    .kickoff-note .ko-price small{font-size:9.5px}
+    .table-note{font-size:11.5px}
+
+    /* === Slide 14 — Operação === */
+    .ops-flow{grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}
+    .ops-step{padding:16px 14px}
+    .ops-step h5{font-size:13px}
+    .ops-step p{font-size:11px}
+
+    /* === Slide 15 — Por que TGT === */
+    .why-grid{grid-template-columns:1fr;gap:24px}
+    .why-item{gap:12px;padding:14px 0}
+    .why-item h5{font-size:14.5px}
+    .why-item p{font-size:12.5px}
+    .why-item .num{font-size:13px;min-width:24px}
+
+    /* === Slide 16 — Closing === */
+    .closing{gap:18px}
+    .closing .display{font-size:clamp(32px,9vw,52px) !important}
+    .arrow-line{font-size:13px;gap:8px;flex-wrap:wrap;justify-content:center}
+    .cta-btn{font-size:12px;padding:16px 24px}
+
+    /* === Controls === */
+    .controls{
+      bottom:14px;padding:8px 12px;gap:10px;
+      width:auto;max-width:calc(100vw - 28px);
+    }
+    .ctrl-btn{width:42px;height:42px}
+    .ctrl-btn svg{width:16px;height:16px}
+    .progress{font-size:13px;min-width:50px}
+  }
+
+  /* ============================================ */
+  /* === RESPONSIVE — MOBILE SMALL (≤ 380px)    === */
+  /* ============================================ */
+  @media (max-width:380px){
+    .slide{padding:18px 14px 96px}
+    .cover-title{font-size:38px}
+    .h-display{font-size:24px}
+    .benefits,.ops-flow{grid-template-columns:1fr}
+    .roles{grid-template-columns:1fr}
+    .role.av{grid-column:span 1}
+    .farm-mono{font-size:38px}
+    .invest-value .price,.phase-price{font-size:48px}
+  }
+
+  /* ============================================ */
+  /* === LANDSCAPE PHONES (height-constrained) === */
+  /* ============================================ */
+  @media (max-height:520px) and (orientation:landscape){
+    .slide{padding:16px 24px 80px;overflow-y:auto}
+    .cover-title{font-size:42px}
+    .h-display{font-size:28px}
   }
 
   /* === Print/PDF === */
@@ -1189,14 +1402,14 @@
         </div>
         <div class="row">
           <div class="cell"><span class="pip"></span><strong>De Marchi Alimentos</strong></div>
-          <div class="cell">Marketing 360° full service + Web</div>
-          <div class="cell mono">210h</div>
+          <div class="cell" data-label="Escopo">Marketing 360° full service + Web</div>
+          <div class="cell mono" data-label="Horas/mês">210h</div>
           <div class="cell price">R$ 17.822,00</div>
         </div>
         <div class="row">
           <div class="cell"><span class="pip"></span><strong>Fazenda Irmãos De Marchi</strong></div>
-          <div class="cell">Branding + Marketing full service + Web</div>
-          <div class="cell mono">55–60h</div>
+          <div class="cell" data-label="Escopo">Branding + Marketing full service + Web</div>
+          <div class="cell mono" data-label="Horas/mês">55–60h</div>
           <div class="cell price">R$ 6.135,00</div>
         </div>
         <div class="row total">
@@ -1419,6 +1632,7 @@
       if(i<n) s.classList.add('prev');
     });
     slides[n].classList.add('active');
+    slides[n].scrollTop = 0; // reset scroll on slide change (mobile)
     idx = n;
     cur.textContent = String(n+1).padStart(2,'0');
   }
@@ -1433,13 +1647,21 @@
     if(e.key==='End') go(total-1);
   });
 
-  // touch swipe
-  let sx=0;
-  document.addEventListener('touchstart',e=>sx=e.touches[0].clientX);
+  // touch swipe (horizontal only, ignore vertical scroll)
+  let sx=0, sy=0, tracking=false;
+  document.addEventListener('touchstart',e=>{
+    sx=e.touches[0].clientX; sy=e.touches[0].clientY; tracking=true;
+  },{passive:true});
   document.addEventListener('touchend',e=>{
+    if(!tracking) return;
     const dx = e.changedTouches[0].clientX - sx;
-    if(Math.abs(dx)>60){ dx<0 ? go(idx+1) : go(idx-1) }
-  });
+    const dy = e.changedTouches[0].clientY - sy;
+    // Only swipe if horizontal gesture clearly dominates vertical
+    if(Math.abs(dx) > 70 && Math.abs(dx) > Math.abs(dy) * 1.6){
+      dx<0 ? go(idx+1) : go(idx-1);
+    }
+    tracking=false;
+  },{passive:true});
 </script>
 </body>
 </html>
